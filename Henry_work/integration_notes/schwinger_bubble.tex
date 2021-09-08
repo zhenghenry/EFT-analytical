@@ -1,0 +1,184 @@
+%        File: !comp!expand("%")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[twoside]{article}
+\usepackage[tmargin=2.5cm,bmargin=2.5cm,lmargin=2cm,rmargin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage[svgnames]{xcolor}
+\usepackage{comment}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{float}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{}
+\chead{}
+\cfoot{\thepage}
+
+\begin{document}
+
+\section{The problem}
+We are interested in two types of integrals, which we call the bubble integral and the triangle integral. The bubble integral has the form,
+\begin{align}
+\label{eq:bubble}
+B(k^2,M1,M2) =  \int \frac{d^3q}{(2\pi)^{3/2}}\frac{1}{(q^2 + M_1)( (k-q)^2 + M_2)}
+\end{align}
+and the triangle integral has the form,
+\begin{align}
+  \int \frac{d^3q}{(2\pi)^{3/2}}\frac{1}{(q^2 + M_1)( (k_1-q)^2 + M_2)( (k_2 + q)^2 + M_3)}.
+\end{align}
+To compute these integrals, we use Feynman parameterization and dim reg. When the masses are real $M_1,M_2$ and $M_3$ are real, we do not
+have to worry about branch cuts and analytic continuation of the above integral in the complex plane. However, we will need to be more
+careful in the case of complex masses. 
+
+One is allowed to introduce Feynman parameterization even with complex masses as this does not introduce extra branch cuts to the integrand.
+
+\section{Bubble integral using Schwinger parameters}
+
+Let us derive the Feynman parametrization for the bubble integral using Schwinger parameters. We will use two important (equivalent) identities:
+\begin{equation}
+  \frac{i}{A} = \int_0^\infty ds (1 + i\epsilon)\, \exp(i A (1 + i \epsilon)s)\,,
+\end{equation}
+if $\Im A >0$, and another equivalent result
+\begin{equation}
+\label{eq:schwinger2}
+-\frac{i}{A} = \int_0^\infty ds (1 - i\epsilon)\, \exp(-i A(1 - i\epsilon) s)\,,
+\end{equation}
+if $\Im A <0$. We will constrain the value of $\epsilon$ in both cases to ensure the integrals are convergent. Eqs. 3 and 4 are
+convergent for $\epsilon = 0$ but it will become important later that $\epsilon$ is positive and non-zero. Let us now consider the case of
+$\Im m > 0$. Eq. 3 is convergent if,
+\begin{align}
+  \Re\left[ i(\Re A + i \Im A)(1 + i\epsilon) \right] = -\Im m - \Re A \epsilon< 0.
+\end{align}
+Taking the form of $A$ to be $q^2 + m$, the conditions on the imaginary part of $A$ become the conditions on the imaginary part of
+$m$ since $q$ is real. Eq. 5 then becomes,
+\begin{align}
+  -\Im m - (q^2 + \Re m)\epsilon < 0,
+\end{align}
+which now depends on the sign of $\Re m$. If $\Re m < 0$,
+\begin{align}
+  \epsilon_{+} < \frac{\Im m}{\lvert \Re m \rvert},
+\end{align}
+where we are free to choose $\epsilon_+$ to be arbitraryly small but positive. If $\Re m m > 0$,
+\begin{align}
+  \epsilon_- > -\frac{\Im m}{Re m},
+\end{align}
+we are again free to choose $\epsilon_-$ to be arbitraryly small but positive.
+
+Now consider the case for $\Im m < 0$, then Eq. 4 is convergent if,
+\begin{align}
+  \Im m - (q^2 + \Re m)\epsilon < 0.
+\end{align}
+The inequality is bounded by the case when $q^2 = 0$, so if $\Re m < 0$,
+\begin{align}
+  \epsilon_+ < \frac{\lvert \Im m\rvert}{\lvert \Re m\rvert},
+\end{align}
+and if $\Re m > 0$,
+\begin{align}
+  \epsilon_- > \frac{\Im m}{\Re m}.
+\end{align}
+In both cases, we are still free to take $\epsilon_{\pm}$ to be positive and arbitraryly small.
+
+Looking at the bubble integral, we note that the imaginary parts of each term in the denominator is the same as the imaginary part of the corresponding mass. 
+
+Let us then first look at the case where both masses have a positive imaginary part. Using our identities, we obtain straightforwardly:
+\begin{equation}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{(2\pi)^{3/2}} e^{i(q^2+M_1)s_1}e^{i((k-q)^2+M_2)s_2}\,.
+\end{equation}
+Simplifying this, we obtain:
+\begin{equation}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{(2\pi)^{3/2}} \exp{i(s_1+s_2)(q+ \frac{s_2}{s_1+s_2}k)^2+i\frac{s_1 s_2}{s_1+s_2}k^2+ i (M_1 s_1 +M_2 s_2)}\,.
+\end{equation}
+
+We can then do 2 things that give the same result:
+\begin{itemize}
+\item We do directly the Gaussian integral in $q$, then do a change of variable $s_1 = \tau x$, $s_2 = \tau (1-x)$ and then integrate in $\tau$, or alternatively
+\item We do a change of variable $s_1 = \tau x$, $s_2 = \tau (1-x)$, integrate in $\tau$, and then do the $q$ integral in the standard dim reg way.
+\end{itemize} 
+
+Let us pick the first way for concreteness. After doing the Gaussian $q$ integral, we get
+\begin{equation}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\frac{1}{(-2 i(s_1+s_2))^{3/2}} \exp{i\frac{s_1 s_2}{s_1+s_2}k^2+ i (M_1 s_1 +M_2 s_2)}\,,
+\end{equation}
+where we used the result
+\begin{equation}
+\label{eq:gauss}
+\int d^d q \exp(i a q^2) = \frac{\pi^{d/2}}{(-i a)^{d/2}}\,,
+\end{equation}
+if $a$ is a real number.
+Now, doing the change of variable described before: $s_1 = \tau x$, $s_2 = \tau (1-x)$, and noting that the Jacobian of the transformation is $\tau$, we get
+\begin{equation}
+B(k^2,M_1,M_2)= - \frac{1}{(-2 i)^{3/2}} \int_0^1 dx \int_0^\infty d\tau\, \tau^{1-3/2}  \exp{i \tau x (1-x)k^2+ i \tau (M_1 x +M_2 (1-x))}\,,
+\end{equation}
+and doing the $\tau$ integral yields the standard Feynman parameter integral:
+\begin{align}
+B(k^2,M_1,M_2)&= \frac{\Gamma(1/2)}{(-2 i)^{3/2}} \int_0^1 dx \frac{(-i)^{3/2}}{\sqrt{x (1-x)k^2+ M_1 x +M_2 (1-x)}}\\
+& = \frac{\sqrt{\pi}}{2^{3/2}} \int_0^1 dx \frac{1}{\sqrt{x (1-x)k^2+ M_1 x +M_2 (1-x)}} \,,
+\end{align}
+which is our familiar Feynman integral. Note that in this case the square root does not have any branch cut, because its argument always has a positive imaginary part, by hypothesis. We were thus able to find the Feynman parameter integral using Schwinger parameters for this case. For two masses with negative imaginary parts, the exact same steps apply, and we obtain the same result.
+
+Let us focus now on the case where the two masses have a different sign in the imaginary part. For concreteness, we assume $\Im M_1 > 0$ and $\Im M_2 < 0$.
+
+In this case we need non-zero $\epsilon$ insertions with Eqs. 3 and 4 since we will develop poles without them. Eq. 13 then becomes,
+\begin{align}
+  B(k^2, M_1, M_2) = \int ds_1ds_2\frac{d^3q}{(2\pi)^{3/2}}(1 + i\epsilon^1_+)(1 - i\epsilon^2_+)\exp\Big( iF\left( q + \frac{k(1 -
+i\epsilon^2_+)s_2}{F} \right)^2 - i\frac{k^2(1-i\epsilon^2_+)^2s^2_2}{F}\right. \nonumber \\
+  + i\left( (1 + i\epsilon^1_+)s_1M_1 - (k^2 + M_2)(1 - i\epsilon^2_+)s_2 \right) \Big),
+\end{align}
+where $F = (1 + i\epsilon^1_+)s_1 - (1-i\epsilon^2_+)s_2$. The $q$ integral will be convergent for $\epsilon^1_+ > 0$ and $\epsilon^2_+ >
+0$. Doing the momentum integral, we obtain,
+\begin{align}
+  B(k^2, M_1,M_2) = \frac{1}{-i^{3/2}}\int ds_1ds_2\frac{1}{F^{3/2}}e^{iI}(1 + i\epsilon^1_+)(1 - i\epsilon^2_+)
+\end{align}
+where $I = m_1(1 + i\epsilon^1_+)s_1 - m_2(1 - i\epsilon^2_+)s_2 - k^2(1 + i\epsilon^1_+)(1 - i\epsilon^2_+)s_1s_2/F$. Now we make the
+change of variables, $s_1 = \tau x$ and $s_2 = \tau(1-x)$ and also take $\epsilon^1_+ = \epsilon^2_+ = \epsilon$,
+\begin{align}
+  B(k^2,M_1,M_2) = \frac{1}{-i^{3/2}}\int^1_0dx\int^{\infty}_0d\tau \frac{\tau^{-1/2}}{(2x-1 + i\epsilon)^{3/2}}\exp\left( i\tau\left(
+      M_1x(1+i\epsilon) - M_2(1-x)(1-i\epsilon) - \frac{k^2x(1-x)(1-i\epsilon)(1 + i\epsilon)}{2x-1 + i\epsilon}
+  \right)\right)(1 - i\epsilon)(1 + i\epsilon)
+\end{align}
+and we can take $\epsilon \rightarrow 0$ everywhere except in the cube root as it contains a pole in this limit. The $\tau$ integration then
+gives,
+\begin{align}
+  B(k^2,M_1,M_2)=-\int^1_0dx \frac{1}{(2x - 1 + i\epsilon)^{3/2}}\frac{1}{\sqrt{-\frac{k^2x(1-x)}{2x-1} + M_1x - M_2(1-x)}}.
+\end{align}
+We evaluate this integral by taking the principal value using the identity,
+\begin{align}
+  \frac{1}{X - X_0+ i\epsilon} = P.V.\frac{1}{X-X_0} - i\pi \delta(X- X_0) .
+\end{align}
+We obtain,
+\begin{align}
+  B(k^2,M_1,M_2)=-\frac{\sqrt{\pi}}{k}\left( \arctan\left( \frac{M_1 - M_2 -k^2}{2k\sqrt{M_1}} \right) - \arctan\left( \frac{-k^2 - M_1 +
+  M_2}{2k\sqrt{M_2}} \right) - \pi \right)
+\end{align}
+
+Following the analogous steps (but this time using \eqref{eq:schwinger2} for $M_2$), we arrive at
+\begin{equation}
+B(k^2,M_1,M_2)= \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{(2\pi)^{3/2}} \exp{i(s_1-s_2)(q- \frac{s_2}{s_1-s_2}k)^2-i\frac{s_1 s_2}{s_1-s_2}k^2+ i (M_1 s_1 -M_2 s_2)}\,.
+\end{equation}
+In this case, we can also do the $q$ integral using \eqref{eq:gauss} and then the change of variables. We get
+\begin{equation}
+B(k^2,M_1,M_2)= \int_0^\infty ds_1 \int_0^\infty ds_2\,\frac{1}{(-2 i(s_1-s_2))^{3/2}} \exp{-i\frac{s_1 s_2}{s_1-s_2}k^2+ i (M_1 s_1 -M_2 s_2)}\,,
+\end{equation}
+and doing the change of variables $s_1 = \tau x$, $s_2 = \tau (1-x)$, we obtain
+\begin{equation}
+B(k^2,M_1,M_2)=  \int_0^1 dx \frac{1}{(-2 i(2x-1))^{3/2}}\int_0^\infty d\tau\, \tau^{1-3/2}  \exp{-i \tau \frac{x (1-x)}{2x-1}k^2+ i \tau (M_1 x -M_2 (1-x))}\,.
+\end{equation}
+Finally, doing the $\tau$ integral, we get a different expression from the standard Feynman parameter integral
+\begin{align}
+B(k^2,M_1,M_2)&= -\frac{\Gamma(1/2)}{(-2 i)^{3/2}} \int_0^1 dx \frac{(-i)^{3/2}}{(2x-1)^{3/2}\sqrt{- \frac{x (1-x)}{2x-1}k^2+ M_1 x -M_2 (1-x)}}\\
+& = -\frac{\sqrt{\pi}}{2^{3/2}} \int_0^1 dx \frac{1}{(2x-1)^{3/2}\sqrt{- \frac{x (1-x)}{2x-1}k^2+ M_1 x -M_2 (1-x)}} \,.
+\end{align}
+Note that in this case the square root also does not have any branch cuts because the imaginary part of the argument is always positive. However, this integral has a simple pole at $x=\frac12$, but the pole contribution should cancel out (like the pole of $1/x$).
+Numerically, this integral is already giving different values from the original momentum integral \eqref{eq:bubble}.
+
+\end{document}

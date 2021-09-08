@@ -1,0 +1,84 @@
+%        File: !comp!expand("%")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[twoside]{article}
+\usepackage[tmargin=2.5cm,bmargin=2.5cm,lmargin=2cm,rmargin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage[svgnames]{xcolor}
+\usepackage{comment}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{float}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{}
+\chead{}
+\cfoot{\thepage}
+
+\begin{document}
+
+\section{The problem}
+We are interested in two types of integrals, which we call the bubble integral and the triangle integral. The bubble integral has the form,
+\begin{align}
+  \int \frac{d^3q}{(2\pi)^{3/2}}\frac{1}{(q^2 + M_1)( (k-q)^2 + M_2)}
+\end{align}
+and the triangle integral has the form,
+\begin{align}
+  \int \frac{d^3q}{(2\pi)^{3/2}}\frac{1}{(q^2 + M_1)( (k_1-q)^2 + M_2)( (k_2 + q)^2 + M_3)}.
+\end{align}
+To compute these integrals, we use Feynman parameterization and dim reg. When the masses are real $M_1,M_2$ and $M_3$ are real, we do not
+have to worry about branch cuts and analytic continuation of the above integral in the complex plane. However, we will need to be more
+careful in the case of complex masses. 
+
+One is allowed to introduce Feynman parameterization even with complex masses as this does not introduce extra branch cuts to the integrand.
+
+\section{Bubble integral}
+Let us focus on the bubble integral. We have,
+\begin{align}
+  \int_{q} \frac{1}{(q^2 + M_1)( (k-q)^2 + M_2)} &=  \int_{q}dx\frac{1}{(q^2(1-x) + M_1(1-x) + (k-q)^2x + M_2x)^2}\\
+  &= \int dx \int_{l}\frac{1}{(l^2 + D)^2}
+\end{align}
+where $l = q + xk$ and $D = x(1-x)k^2 + M_2 + x(M_1-M_2)$. Since $x,k$ and $q$ are all real, $l$ remains real. We can anlytically continue
+the integration of $l$ to the complex plane and take the usual semicircle contour since the integrand vanishes at $\lvert l \rvert
+\rightarrow \infty$. The integrand has a second order pole at $l = \pm i\sqrt{D}$. Since the poles will always be distributed
+such that one exists in the upper half plane and the other in the lower half plane, it does not matter if we choose to close the contour in
+the upper or lower half of the plane. After computing the residue of the pole we get the usual dim reg result,
+\begin{align}
+  \int dx \int_{l} \frac{1}{(l^2 + D)^2} = \int dx \frac{\sqrt{\pi}}{D^{1/2}}
+\end{align}
+However, there is one subtlety, which is that we need to check that the poles never lie on the real axis. This can easily be shown.
+In order for a pole to lie on the real axis, we would require $\Re(\sqrt{D}) = 0$ and $\Im(\sqrt{D})\neq 0$. However, $D$ has the form,
+\begin{align}
+  D = x(1-x)k^2 + M_2 + x(M_1 - M_2)
+\end{align}
+The first term will always be equal or greater than 0, and since $M_2$ always has a real component for non-zero masses, $D$ will never have
+0 real component to it, and thus we will never cross any poles as we integrate over the real axis. Therefore,
+\begin{align}
+  \sqrt{\pi}\int dx D^{-1/2} = i\log\left( 2\sqrt{D} + i(m_1 + m_2 - 2x + 1) \right).
+\end{align}
+Where $m_1 = M_1/k^2$ and $m_2 = M_2/k^2$. 
+
+\section{Triangle integral}
+The triangle integral has the form,
+\begin{align}
+  \int \frac{d^3q}{(2\pi)^{3/2}}\frac{1}{(q^2 + M_1)( (k_1 - q)^2 + M_2)( (k_2 + q)^2 + M_3)}.
+\end{align}
+After introducing Feynman parameters we have an integral of the form,
+\begin{align}
+  \int dx dy \int_l \frac{1}{(l^2 + D)^3}
+\end{align}
+again $l$ is real and we can analytically continue to the complex plane and take the contour integral. The integrand contains a third order
+pole and we can compute the residue the same way to get the dim reg result. The poles are again at $l = \pm i \sqrt{D}$ and since the masses
+$M_1, M_2$ and $M_3$ always have non-zero real components, we never have poles on the real axis, and thus the dim reg result is always true. 
+\end{document}
+
+

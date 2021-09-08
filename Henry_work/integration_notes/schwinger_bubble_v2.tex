@@ -1,0 +1,383 @@
+%        File: !comp!expand("%")!comp!
+%     Created: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+% Last Change: !comp!strftime("%a %b %d %I:00 %p %Y ").substitute(strftime('%Z'), '\<\(\w\)\(\w*\)\>\(\W\|$\)', '\1', 'g')!comp!
+%
+\documentclass[twoside]{article}
+\usepackage[tmargin=2.5cm,bmargin=2.5cm,lmargin=2cm,rmargin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage[svgnames]{xcolor}
+\usepackage{comment}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{float}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{}
+\chead{}
+\cfoot{\thepage}
+
+\begin{document}
+
+\section{The problem: find expressions for bubble and triangle integrals}
+We are interested in two types of integrals, which we call the bubble integral and the triangle integral. The bubble integral has the form,
+\begin{align}
+\label{eq:bubble}
+B(k^2,M1,M2) =  \int \frac{d^3q}{\pi^{3/2}}\frac{1}{(q^2 + M_1)( (k-q)^2 + M_2)}
+\end{align}
+and the triangle integral has the form,
+\begin{align}
+  \int \frac{d^3q}{\pi^{3/2}}\frac{1}{(q^2 + M_1)( (k_1-q)^2 + M_2)( (k_2 + q)^2 + M_3)}.
+\end{align}
+To compute these integrals, we use Feynman parameterization and dim reg. When the masses are real $M_1,M_2$ and $M_3$ are real, we do not
+have to worry about branch cuts and analytic continuation of the above integral in the complex plane. However, we will need to be more
+careful in the case of complex masses. 
+
+One is allowed to introduce Feynman parameterization even with complex masses as this does not introduce extra branch cuts to the integrand.
+
+\section{Preliminaries}
+\label{sec:prelim}
+
+In this section, we will state some useful ingredients that are helpful in our calculation.
+
+\subsection{Generalized multiplicative formulas for logs and square roots}
+
+Following the paper by t'Hooft and Veltman (1979), we use logs and square roots that have a branch cut in the negative real axis.
+
+The rule for the log of a product is then:
+\begin{equation}
+\begin{split}
+& \log(a b) = \log(a) + \log(b) + \eta(a,b)\,, \\
+& \eta(a,b) = 2 \pi i \left[ \theta(- \Im a) \theta(- \Im b) \theta(\Im ab) - \theta(\Im a) \theta(\Im b) \theta(-\Im ab) \right]\,,
+\end{split}
+\end{equation}
+where $\theta$ is the Heaviside step function, and $a$ and $b$ are complex numbers. If $a$ (and/or $b$) is a negative real, one should prescribe $\Im a = i \, \epsilon$, where $\epsilon>0$. Thus in that case, we have $\theta(\Im a)=1$ and $\theta(-\Im a)=0$. For consistency, if $a$ is a positive real, we prescribe $\theta(\Im a)=0$ and $\theta(-\Im a)=1$.
+
+Useful consequences are:
+\begin{align}
+& \log(a b) = \log(a) + \log(b) \,, \text{ if $\Im a$ and $\Im b$ have different sign,}\\
+& \log(\frac{a}{b}) = \log(a) - \log(b) \,, \text{ if $\Im a$ and $\Im b$ have the same sign.}
+\end{align}
+
+Defining the square root as $\sqrt{a} \equiv \exp(\log(a)/2)$, we obtain the analogous expressions:
+\begin{equation}
+\begin{split}
+& \sqrt{a b} = s(a,b)\sqrt{a}\sqrt{b}\,, \\
+& s(a,b) \equiv \exp{\eta(a,b)/2} =(-1)^{\theta(- \Im a) \theta(- \Im b) \theta(\Im ab)} (-1)^{\theta(\Im a) \theta(\Im b) \theta(-\Im ab)}
+\,,
+\end{split}
+\end{equation}
+and specifically:
+\begin{align}
+& \sqrt{a b} = \sqrt{a}  \sqrt{b} \,, \text{ if $\Im a$ and $\Im b$ have different sign,}\\
+& \sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}\,, \text{ if $\Im a$ and $\Im b$ have the same sign.}
+\end{align}
+
+As a quick example, let us look at $\sqrt{-z}$.
+Applying the product rule in the numerator, we obtain:
+\begin{equation}
+\sqrt{-z} = s(-1,z)\, i \sqrt{z} =  (-1)^{\theta(\Im 1) \theta(- \Im z)} (-1)^{\theta(\Im -1) \theta(\Im z)} i \sqrt{z}\,,
+\end{equation}
+and using our prescription, we get $\theta(\Im -1) = 1$ and $\theta(\Im 1) = 0$, and our result simplifies to 
+\begin{equation}
+\sqrt{-z} = s(-1,z)\, i \sqrt{z} =  (-1)^{\theta(\Im z)} i \sqrt{z}\,,
+\end{equation}
+which means that $\sqrt{-z} = i\sqrt{z}$ only in the lower complex plane and in the positive real axis, while $\sqrt{-z} = -i\sqrt{z}$ in the upper complex plane and in the negative real axis.
+
+
+\section{Bubble integral using Schwinger parameters}
+
+Let us derive the Feynman parametrization for the bubble integral using Schwinger parameters. We will use two important (equivalent) identities:
+\begin{equation}
+\label{eq:schwinger1}
+  \frac{i}{A} = \int_0^\infty ds (1 + i\epsilon)\, \exp(i A (1 + i \epsilon)s)\,,
+\end{equation}
+if $\Im A >0$, and another analogous result
+\begin{equation}
+\label{eq:schwinger2}
+-\frac{i}{A} = \int_0^\infty ds (1 - i\epsilon)\, \exp(-i A(1 - i\epsilon) s)\,,
+\end{equation}
+if $\Im A <0$. We will constrain the value of $\epsilon$ in both cases to ensure the integrals are convergent. Eqs.~\eqref{eq:schwinger1} and \eqref{eq:schwinger2} are
+convergent for $\epsilon = 0$ but it will become important later that $\epsilon$ is positive and non-zero. Let us now consider the case of
+$\Im m > 0$. Eq.~\eqref{eq:schwinger1} is convergent if,
+\begin{align}
+\label{eq:cond1}
+  \Re\left[ i(\Re A + i \Im A)(1 + i\epsilon) \right] = -\Im A - \Re A \epsilon< 0.
+\end{align}
+Taking the form of $A$ to be $q^2 + m$, the conditions on the imaginary part of $A$ become the conditions on the imaginary part of
+$m$ since $q$ is real. Eq.~\eqref{eq:cond1} then becomes,
+\begin{align}
+  -\Im m - (q^2 + \Re m)\epsilon < 0,
+\end{align}
+which now depends on the sign of $\Re m$. If $\Re m < 0$,
+\begin{align}
+  \epsilon < \frac{\Im m}{\lvert \Re m \rvert},
+\end{align}
+where we are free to choose $\epsilon$ to be arbitrarily small but positive. If $\Re m > 0$,
+\begin{align}
+  \epsilon > -\frac{\Im m}{\Re m},
+\end{align}
+we are again free to choose $\epsilon_-$ to be arbitrarily small but positive.
+
+Now consider the case for $\Im m < 0$, then Eq.~\eqref{eq:schwinger2} is convergent if,
+\begin{align}
+  \Im m - (q^2 + \Re m)\epsilon < 0.
+\end{align}
+The inequality is bounded by the case when $q^2 = 0$, so if $\Re m < 0$,
+\begin{align}
+  \epsilon < \frac{\lvert \Im m\rvert}{\lvert \Re m\rvert},
+\end{align}
+and if $\Re m > 0$,
+\begin{align}
+  \epsilon > \frac{\Im m}{\Re m}.
+\end{align}
+In both cases, we are still free to take $\epsilon$ to be positive and arbitrarily small.
+
+Looking at the bubble integral, we note that the imaginary parts of each term in the denominator is the same as the imaginary part of the corresponding mass. 
+
+Let us then first look at the case where both masses have a positive imaginary part. Using our identities, we obtain straightforwardly:
+\begin{equation}
+\label{eq:bubble}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{\pi^{3/2}} e^{i(q^2+M_1)s_1}e^{i((k-q)^2+M_2)s_2}\,.
+\end{equation}
+Simplifying this, we obtain:
+\begin{equation}
+\begin{split}
+B(k^2,M_1,M_2)&= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{\pi^{3/2}} (1 + i\epsilon^1)(1 + i\epsilon^2)\\
+&\exp{i F_+ (q+ \frac{s_2(1 + i\epsilon^2)}{F_+}k)^2+i\frac{s_1 s_2(1 + i\epsilon^1)(1 + i\epsilon^2)}{F_+}k^2+ i (M_1 s_1(1 + i\epsilon^1) +M_2 s_2(1 + i\epsilon^2))}\,,
+\end{split}
+\end{equation}
+where $F_+= (1 + i\epsilon^1)s_1+(1 + i\epsilon^2)s_2$.
+
+We can then do 2 things that give the same result:
+\begin{itemize}
+\item We do directly the Gaussian integral in $q$, then do a change of variable $s_1 = \tau x$, $s_2 = \tau (1-x)$ and then integrate in $\tau$, or alternatively
+\item We do a change of variable $s_1 = \tau x$, $s_2 = \tau (1-x)$, integrate in $\tau$, and then do the $q$ integral in the standard dim reg way.
+\end{itemize} 
+
+Let us pick the first way for concreteness.
+We can now set $\epsilon^1=\epsilon^2=\epsilon$, and guarantee that the Gaussian integral converges (because we have $F_+ = s_1 + s_2 + i \tilde{\epsilon}$, where we redefined the $\epsilon$).
+After doing the Gaussian $q$ integral, and setting $\epsilon \to 0$ where no poles show up, we get
+\begin{equation}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\frac{1}{(- i(s_1+s_2+ i \epsilon))^{3/2}} \exp{i\frac{s_1 s_2}{s_1+s_2+i\epsilon}k^2+ i (M_1 s_1 +M_2 s_2)}\,,
+\end{equation}
+where we used the result
+\begin{equation}
+\label{eq:gauss}
+\int d^d q \exp(i a q^2) = \frac{\pi^{d/2}}{(-i a)^{d/2}}\,,
+\end{equation}
+if $a$ is a real number.
+Now, doing the change of variable described before: $s_1 = \tau x$, $s_2 = \tau (1-x)$, and noting that the Jacobian of the transformation is $\tau$, we get
+\begin{equation}
+B(k^2,M_1,M_2)= - \frac{1}{(- i)^{3/2}} \int_0^1 dx \int_0^\infty d\tau\, \tau (\tau+i \epsilon)^{-3/2}  \exp{i \frac{\tau^2}{\tau+i \epsilon} x (1-x)k^2+ i \tau (M_1 x +M_2 (1-x))}\,,
+\end{equation}
+and since the integral is convergent when $\epsilon \to 0$, we get:
+\begin{equation}
+B(k^2,M_1,M_2)= - \frac{1}{(- i)^{3/2}} \int_0^1 dx \int_0^\infty d\tau\, \tau^{-1/2}  \exp{i \tau x (1-x)k^2+ i \tau (M_1 x +M_2 (1-x))}\,,
+\end{equation}
+and doing the $\tau$ integral yields the standard Feynman parameter integral:
+\begin{align}
+B(k^2,M_1,M_2)&= \frac{\Gamma(1/2)}{(- i)^{3/2}} \int_0^1 dx \frac{(-i)^{3/2}}{\sqrt{x (1-x)k^2+ M_1 x +M_2 (1-x)}}\\
+& = \sqrt{\pi}\int_0^1 dx \frac{1}{\sqrt{x (1-x)k^2+ M_1 x +M_2 (1-x)}} \,, \label{eq:Bsame}
+\end{align}
+which is our familiar Feynman integral.  
+Note that in this case the square root does not have any branch cut, because its argument always has a positive imaginary part, by hypothesis. We were thus able to find the Feynman parameter integral using Schwinger parameters for this case. For two masses with negative imaginary parts, the exact same steps apply, and we obtain the same result.
+
+Solving this integral yields:
+\begin{equation}
+B(k^2,M_1,M_2) =\frac{\sqrt{\pi}}{k} \left[ i \log \left(2 \sqrt{x (1-x) + m_1 x + m_2 (1-x)}+i (m_1-m_2-2 x+1)\right)\right]_{x=0}^{x=1} \,,
+\end{equation}
+where $m_1 = M_1/k^2$ and $m_2 = M_2/k^2$. To use this expression, we need to check if the argument of the $\log$ crosses its branch cut (the negative real axis). If it does, we need to add/subtract $2 \pi i$, depending on the direction of the crossing.
+
+Let us focus now on the case where the two masses have a different sign in the imaginary part. For concreteness, we assume $\Im M_1 > 0$ and $\Im M_2 < 0$.
+
+In this case we need non-zero $\epsilon$ insertions with Eqs.~\eqref{eq:schwinger1} and \eqref{eq:schwinger2} since we will develop poles without them. Eq.~\eqref{eq:bubble} then becomes,
+\begin{align}
+ B(k^2, M_1, M_2) &= \int_0^\infty ds_1 ds_2\frac{d^3q}{\pi^{3/2}}(1 + i\epsilon^1)(1 - i\epsilon^2)\exp\Big( iF\left( q + \frac{k(1 - i\epsilon^2)s_2}{F} \right)^2 - i\frac{k^2(1+i\epsilon^1) s_1 (1-i\epsilon^2) s_2}{F} \nonumber \\
+&+ i\left( (1 + i\epsilon^1)s_1 M_1 - (k^2 + M_2)(1 - i\epsilon^2)s_2 \right) \Big),
+\end{align}
+where $F = (1 + i\epsilon^1)s_1 - (1-i\epsilon^2)s_2 = s_1 - s_2 + i \tilde{\epsilon}$. The $q$ integral will be convergent for $\epsilon^1 > 0$ and $\epsilon^2 > 0$. Doing the momentum integral and taking $\epsilon \rightarrow 0$ where possible, we obtain,
+\begin{align}
+  B(k^2, M_1,M_2) = \frac{1}{(-i)^{3/2}}\int ds_1ds_2\frac{1}{F^{3/2}}e^{iI}
+\end{align}
+where $I = M_1 s_1 - M_2 s_2 - k^2 s_1s_2/F$. Now we make the
+change of variables, $s_1 = \tau x$ and $s_2 = \tau(1-x)$ and also take $\epsilon^1 = \epsilon^2 = \epsilon$,
+\begin{align}
+  B(k^2,M_1,M_2) = \frac{1}{-i^{3/2}}\int^1_0dx\int^{\infty}_0d\tau \frac{\tau^{-1/2}}{(2x-1 + i\epsilon)^{3/2}}\exp\left( i\tau\left(
+      M_1 x - M_2(1-x) - \frac{k^2x(1-x)}{2x-1 + i\epsilon}
+  \right)\right)
+\end{align}
+The $\tau$ integration then gives,
+\begin{align}
+ B(k^2,M_1,M_2) =   -\sqrt{\pi}\int^1_0dx \frac{1}{(2x - 1 + i\epsilon)^{3/2}}\frac{1}{\sqrt{-\frac{k^2x(1-x)}{2x-1+ i\epsilon} + M_1x - M_2(1-x)}}.
+\end{align}
+We evaluate this integral by taking the principal value using the identity,
+\begin{align}
+  \frac{1}{X - X_0+ i\epsilon} = P.V.\frac{1}{X-X_0} - i\pi \delta(X- X_0) .
+\end{align}
+We obtain,
+\begin{align}
+\label{eq:PVintegral}
+ B(k^2,M_1,M_2) = -\sqrt{\pi}\left(P.V. \int^1_0dx \frac{1}{2x - 1}\frac{1}{\sqrt{2x - 1}\sqrt{-\frac{k^2x(1-x)}{2x-1} + M_1x - M_2(1-x)}} -\frac{i \pi}{2} (-2 i) \right).
+\end{align}
+The principal value term can be evaluated by using $\arctan$ and carefully choosing a specific Riemann sheet.
+Specifically, one obtains:
+\begin{equation}
+\begin{split}
+B(k^2, M_1, M_2) = -\frac{\sqrt{\pi}}{k}&\left(-\frac{2 i \sqrt{- y_1} \sqrt{- y_2}}{\sqrt{2 y_1-1} \sqrt{1- 2 y_2} \sqrt{-(1 + 2(m_1 + m_2)) y_1 y_2}} \left[ \arctan \left(\frac{\sqrt{1-2 y_2} \sqrt{x -y_1}}{\sqrt{2 y_1-1} \sqrt{x - y_2}}\right)\right]_{x=0}^{x=1}\right. \\
+&\left. - \pi \right)\,,
+\end{split}
+\end{equation}
+where $y_1$ and $y_2$ are the roots of the second-degree polynomial $P(x)$ given by
+\begin{equation}
+P(x) = (x -1) x +(2 x -1)\, x \, m_1 +\left(2 x ^2-3 x +1\right) m_2\,,
+\end{equation}
+giving for $y_1$ and $y_2$:
+\begin{align}
+y_1 &= \frac{-\sqrt{m_1^2-2 m_1 m_2 + 2 m_1+m_2^2+2 m_2+1}+m_1+3 m_2+1}{2 (2 m_1+2 m_2+1)} \\
+y_2 &= \frac{\sqrt{m_1^2-2 m_1 m_2+2 m_1+m_2^2+2 m_2+1}+m_1+3 m_2+1}{2 (2 m_1+2 m_2+1)}\,.
+\end{align}
+Again, the crossings of the $\arctan$ branch cuts need to be taken into account carefully (by adding or subtracting $\pi$, or $\pi/2$ in the case the crossing happens exactly at $i$ or $-i$, for example when $x=1/2$).
+This expression agrees with the numerical momentum integral.
+
+We can also take the expression in Eq.~\eqref{eq:PVintegral} and do a change of variable to put it in a more familiar form.
+Indeed, by introducing $\hat{x} \equiv \frac{x}{2 x - 1}$, we get the mapping
+\begin{equation}
+x \in [0,1] \Rightarrow \hat{x} \in [0,-\infty] \cup [\infty, 1]\,,
+\end{equation}
+with $\infty$ in $\hat{x}$ corresponding to $\frac{1}{2}$ in $x$. 
+Applying this change of variable to Eq.~\eqref{eq:PVintegral} yields:
+\begin{equation}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left(\int_0^{-\infty} d\hat{x} \frac{i}{\sqrt{-\hat{x} (1-\hat{x})k^2 - M_1 \hat{x} - M_2 (1-\hat{x})}} + \int_{+\infty}^{1} d\hat{x} \frac{1}{\sqrt{\hat{x} (1-\hat{x})k^2+ M_1 \hat{x} +M_2 (1-\hat{x})}} + \pi\right)\,,
+\end{equation}
+which is a very familiar integrand (see Eq.~\eqref{eq:Bsame}).
+
+
+\section{Triangle integral}
+\section{Triangle integral with Schwinger parameters}
+Let us compute the triangle integral,
+\begin{align}
+  T(k^2_1, k^2_2, M_1, M_2, M_3) = \int \frac{d^3q}{\pi^{3/2}}\frac{1}{((\vec{k}_1 - \vec{q})^2 + M_1) (q^2 + M_2)( (\vec{k}_2 +
+\vec{q})^2 + M_3)}
+\end{align}
+in a similar way to the bubble integral. 
+
+
+Let us consider the case of two masses $M_1$ and $M_2$ having positive imaginary parts and $M_3$ having a negative imaginary part. 
+\begin{align}
+  T(\dots) &= -i\int \prod ds_i \int_q (1 + i\epsilon_1)(1 + i\epsilon_2)(1 - i\epsilon_3) \times \nonumber \\
+  &\exp\left[ i\left( (k_1 - q)^2 + M_1\right)(1 + i\epsilon_1)s_1 + i\left( q^2 + M_2 \right)(1 + i\epsilon_2)s_2 - i\left( (k_2 + q)^2 +
+  M_3 \right)(1 - i\epsilon_3)s_3 \right]
+\end{align}
+Expanding the exponential,
+\begin{align}
+  (1 + i\epsilon_1)s_1(k^2_1 + q^2 - 2k_1\cdot q + M_1) + (1 + i\epsilon_2)s_2(q^2 + M_2) - (1 - i\epsilon_3)s_3(k^2_2 + q^2 + 2k_2\cdot q +
+  M_3)\\
+  = q^2\left[ (1 + i\epsilon_1)s_1 + (1 + i\epsilon_2)s_2 - (1 - i\epsilon_3)s_3 \right] - 2q\cdot\left[k_1(1 + i\epsilon_1)s_1 +
+  k_2(1 - i\epsilon_3)s_3  \right] + (1 + i\epsilon_1)s_1(k^2_1 + M_1) \nonumber \\
+  + (1 + i\epsilon_2)s_2M_2 - (1-i\epsilon_3)s_3(k^2_2 + M_3)\\
+  = F \left( q^2 - 2q\cdot \frac{(1 + i\epsilon_1)s_1k_1 + (1 - i\epsilon_3)s_3k_2}{F}\right) + (1 + i\epsilon_1)s_1(k^2_1+M_1) + (1 +
+  i\epsilon_2)s_2M_2 - (1 - i\epsilon_3)s_3(k^2_2+M_3)\\
+  =F\left(q - \frac{s_1k_1 + s_3k_2}{F}\right)^2 - \frac{\left[s_1k_1 + s_3k_2 \right]^2}{F} + s_1k^2_1 - s_3k^2_2 + s_1M_1 + s_2M_2 -
+  s_3M_3\\
+  = F(\dots)^2 - \frac{s^2_1k^2_1 + 2s_1s_3k_1\cdot k_2 + s^2_3k^2_2}{F} + (s_1 + s_2 - s_3)(s_1k^2_1 - s_3k^2_2)/F + s_1M_1 + s_2M_2 -
+  s_3M_3\\
+  = F(\dots)^2 - \frac{2s_1s_3k_1\cdot k_2 + s_1s_3k^2_2 - s_1s_2k^2_1 + s_2s_3k^2_2 + s_1s_3k^2_1}{F} + s_1M_1 + s_2M_2 - s_3M_3\\
+  = F(\dots)^2 + \frac{s_1s_2k^2_1 - s_1s_3k^2_3 - s_2s_3k^2_2}{F} + s_1M_1 + s_2M_2 - s_3M_3
+\end{align}
+where we take the limit $\epsilon_i \rightarrow 0$ where no singularities appear and redefine $F = s_1 + s_2 - s_3 + i\tilde{\epsilon}$.
+After the Gaussian integral we obtain,
+\begin{align}
+  T = \frac{-i}{(-i)^{3/2}}\int ds_1ds_2 \frac{1}{F^{3/2}}e^{iI}
+\end{align}
+where $I = (s_1s_2k^2_1 - s_3s_1k^2_3 - s_2s_3k^2_2)/F + s_1M_1 + s_2M_2 - s_3M_3$. Change of variables $s_1 = \tau x_1, s_2 = \tau x_2, s_3
+= \tau (1 - x_1 - x_2) = \tau x_3$,
+\begin{align}
+  T = \frac{1}{(-i)^{1/2}}\int dx_1dx_2d\tau \frac{\tau^{1/2}}{\left(2(x_1 + x_2) - 1 + i\tilde{\epsilon}\right)^{3/2}}e^{i\tau
+  \tilde{I}}
+\end{align}
+where $\tilde{I} = \frac{x_1x_2k^2_1 - x_2x_3k^2_2 - x_1x_3k^2_3}{2(x_1 + x_2) - 1 + i\tilde{\epsilon}} + x_1M_1 + x_2M_2 - x_3M_3$. Doing
+the $\tau$ integral yields,
+\begin{align}
+  T = -i\frac{\sqrt{\pi}}{2}\int^1_0dx_1dx_2 dx_3\delta(1-\sum x_i)\left( x_1 + x_2 - x_3 + i\tilde{\epsilon} \right)^{-3/2}\tilde{I}^{-3/2}
+\end{align}
+
+Again evaluating this integral with the principal value,
+\begin{align}
+  T = -\frac{\sqrt{\pi}}{2}\int dx_1dx_2dx_3\delta(1-\sum x_i)\left( P.V. \frac{1}{x_1 + x_2 - x_3} - \frac{i\pi}{2}\delta(x_2 + x_1 -
+  \frac{1}{2}) \right)(x_1 + x_2 - x_3 + i\epsilon)^{-1/2}\tilde{I}^{-3/2}
+\end{align}
+however, the second term not involving the principal value evaluates to 0 so we are left with,
+\begin{equation}
+  \label{eq:trimxy}
+  T = -\frac{\sqrt{\pi}}{2}P.V.\int dx_1dx_2dx_3 \deta(1-\sum x_i)\frac{1}{x_1 + x_2 - x_3}\frac{1}{\sqrt{x_1 + x_2 - x_3 + i\epsilon}}
+  \tilde{I}^{-3/2}
+\end{equation}
+\subsection{Prefactor in antiderivative}
+
+The expression for $F_{\rm int}$ is
+\begin{equation}
+F_{\rm int}(x,y_1,y_2,x_0) = P(a,x,y_1,y_2)\frac{2 \arctan\left(\frac{\sqrt{x-y_1} \sqrt{x_0-y_2}}{\sqrt{x-y_2} \sqrt{y_1-x_0}}\right)}{\sqrt{y_1 - x_0}\sqrt{x_0 - y_2}}\,,
+\end{equation}
+where the function $P$ is given by:
+\begin{equation}
+P(a,x,y_1,y_2)=\frac{\sqrt{x-y_1} \sqrt{x-y_2}}{\sqrt{a (x-y_1) (x-y_2)}}\,.
+\end{equation}
+We also know that $F_{\rm int}$ is symmetric under $y_1 \Leftrightarrow y_2$.
+
+
+We only need to calculate this expression for $x \to 0$, keeping $x>0$. Also, $a$ is a negative real number. Let us use our product rule for square roots (defined in Section~\ref{sec:prelim}) to simplify this expression. In general we can just calculate this directly, but we may run into trouble when $y_1$ or $y_2$ vanish. Let us show how to deal with that.
+Take $y_1=0$. Then
+\begin{equation}
+P(a,x,y_1=0,y_2) = \frac{\sqrt{x}\sqrt{x-y_2}}{\sqrt{a x (x-y_2)}} = \frac{\sqrt{x}\sqrt{x-y_2}}{\sqrt{|a|}\sqrt{x}\sqrt{-(x-y_2)}} =  \frac{\sqrt{-y_2}}{\sqrt{|a|}\sqrt{y_2}}\,,
+\end{equation}
+and similarly
+\begin{equation}
+P(a,x,y_1,y_2=0) =  \frac{\sqrt{-y_1}}{\sqrt{|a|}\sqrt{y_1}}\,,
+\end{equation}
+and in the case where both $y_1$ and $y_2$ vanish:
+\begin{equation}
+P(a,x,y_1=0,y_2=0) = \frac{x}{\sqrt{a x^2}} = \frac{1}{\sqrt{a}} \,.
+\end{equation}
+Note that these results do not depend on $x$.
+
+\subsection{Limiting values for $\arctan$}
+
+Now that $P$ is well defined, let us look at $\tilde{F}_{\rm int} \equiv \frac{2 \arctan\left(\frac{\sqrt{x-y_1} \sqrt{x_0-y_2}}{\sqrt{x-y_2} \sqrt{y_1-x_0}}\right)}{\sqrt{y_1 - x_0}\sqrt{x_0 - y_2}}$. The issues that we are focusing on are:
+\begin{enumerate}
+\item When the result is indeterminate;
+\item When we cross a branch cut.
+\end{enumerate}
+
+The result can be indeterminate in 2 situations: when $x=y_2$ and when $x_0 = y_2$.
+Regarding the first case, we know that $x$ runs from 0 to 1, and we know that, for a general complex $z$:
+\begin{align}
+&\lim_{X \to 0^+} \arctan\left(\frac{z}{X}\right) = \frac{\sqrt{z^2}\pi}{2 z} \label{eq:limit1}\\
+&\lim_{X \to 0^+} \arctan\left(\frac{z}{i X}\right) = i \frac{\sqrt{-z^2}\pi}{2 z}\,. \label{eq:limit2}
+\end{align} 
+The problematic values of $y_2$ are 0 and 1 because they are the values at which we calculate the antiderivative. 
+
+When $y_2 = 0$, we have for a general function $f$, $\lim_{x \to 0^+} f(\sqrt{x-y_2}) = \lim_{X \to 0^+} f(X)$. 
+When $y_2 = 1$, we have $\lim_{x \to 1^-} f(\sqrt{x-y_2}) = \lim_{X \to 0^+} f(i X)$. 
+Therefore when $y_2 = 0$ we use Eq.~\eqref{eq:limit1} with $z = \frac{\sqrt{-y_1} \sqrt{x_0}}{\sqrt{y_1-x_0}}$, giving 
+\begin{equation}
+\tilde{F}_{\rm int} = \sqrt{\left(\frac{\sqrt{-y_1} \sqrt{x_0}}{\sqrt{y_1-x_0}}\right)^2}\frac{\pi}{2}\frac{\sqrt{y_1-x_0}}{\sqrt{-y_1} \sqrt{x_0}}= \sqrt{\frac{-y_1\, x_0}{y_1-x_0}}\frac{\pi}{2}\frac{\sqrt{y_1-x_0}}{\sqrt{-y_1} \sqrt{x_0}}\,,
+\end{equation}
+and this last expression can be simplified using the generalized product rule for square roots.
+
+
+
+ and when $y_2 = 1$ we use Eq.~\eqref{eq:limit2}, with the same $z$.
+
+When $x_0 = y_2$ we just use the Taylor approximation for $\arctan$ for a small argument $z$: $\arctan(z) \approx z$.
+
+
+
+\end{document}

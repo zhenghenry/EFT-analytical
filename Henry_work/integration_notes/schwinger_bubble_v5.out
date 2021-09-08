@@ -1,0 +1,21 @@
+\BOOKMARK [1][-]{section.1}{The problem: find expressions for bubble and triangle integrals}{}% 1
+\BOOKMARK [1][-]{section.2}{Preliminaries}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Generalized multiplicative formulas for logs and square roots}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Schwinger parametrization}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{Bubble integral using Schwinger parameters}{}% 5
+\BOOKMARK [2][-]{subsection.3.1}{Masses with the same imaginary part sign}{section.3}% 6
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Finding a general expression for the integral}{subsection.3.1}% 7
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Analyzing the branch cut crossings}{subsection.3.1}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Masses with opposite imaginary part sign}{section.3}% 9
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Directly solving the integral}{subsection.3.2}% 10
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Relating this case with the case where masses have the same imaginary part sign}{subsection.3.2}% 11
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Relating the integrals using contour integration}{subsection.3.2}% 12
+\BOOKMARK [1][-]{section.4}{Triangle integral with Schwinger parameters}{}% 13
+\BOOKMARK [2][-]{subsection.4.1}{Case where the imaginary part of the masses have the same sign}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.2}{Case where all masses have positive real part}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.3}{Case where the imaginary part of the masses have the opposite sign}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.4}{Limiting values of s\(a,b\)}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.5}{Triangle integral with opposite imaginary masses}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.6}{Derivation of Fint}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.7}{Prefactor in antiderivative}{section.4}% 20
+\BOOKMARK [2][-]{subsection.4.8}{Limiting values for }{section.4}% 21

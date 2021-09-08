@@ -1,0 +1,15 @@
+[package]
+name = "ibps"
+version = "0.1.0"
+authors = ["Ben Ruijl <benruyl@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rug = "1.12"
+num-integer = "0.1"
+lazy_static = "1.4.0"
+ndarray = "0.15.3"
+ndarray_einsum_beta = "0.7"
+num-complex = "0.4"

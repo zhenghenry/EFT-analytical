@@ -1,0 +1,1180 @@
+\documentclass[twoside]{article}
+\usepackage[tmargin=2.5cm,bmargin=2.5cm,lmargin=2cm,rmargin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage[svgnames]{xcolor}
+\usepackage{comment}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{float}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{}
+\chead{}
+\cfoot{\thepage}
+
+\begin{document}
+
+\title{Notes on efficient ways to compute loop integrals in the EFTofLSS}
+
+\author{Henry Zheng \and
+	Diogo Bragan\c{c}a \and
+	Leonardo Senatore 
+}
+
+
+\date{\today}
+
+\maketitle
+
+\begin{abstract}
+We compute QFT-like bubble and triangle integrals for general complex masses.
+\end{abstract}
+
+\tableofcontents
+
+\section{The problem: find expressions for bubble and triangle integrals}
+We are interested in two types of integrals, which we call the bubble integral and the triangle integral. The bubble integral has the form,
+\begin{align}
+B(k^2,M_1,M_2) =  \int \frac{d^3q}{\pi^{3/2}}\frac{1}{(q^2 + M_1)( (k-q)^2 + M_2)}
+\end{align}
+and the triangle integral has the form,
+\begin{align}
+T(k_1^2, k_2^2, k_3^2, M_1, M_2, M_3) =  \int \frac{d^3q}{\pi^{3/2}}\frac{1}{(q^2 + M_1)( (k_1-q)^2 + M_2)( (k_2 + q)^2 + M_3)},
+\end{align}
+where $k_1 + k_2 + k_3 = 0$.
+To compute these integrals, we use Feynman parameterization and dim reg. When the masses $M_1,M_2$ and $M_3$ are real, we do not
+have to worry about branch cuts and analytic continuation of the above integral in the complex plane. However, we will need to be more
+careful in the case of complex masses. 
+
+
+\section{Preliminaries}
+\label{sec:prelim}
+
+In this section, we will state some useful ingredients that are helpful in our calculation.
+
+\subsection{Generalized multiplicative formulas for logs and square roots}
+
+Following the paper by t'Hooft and Veltman (1979), we use logs and square roots that have a branch cut in the negative real axis.
+
+The rule for the log of a product is then:
+\begin{equation}
+\begin{split}
+& \log(a b) = \log(a) + \log(b) + \eta(a,b)\,, \\
+& \eta(a,b) = 2 \pi i \left[ \theta(- \Im a) \theta(- \Im b) \theta(\Im ab) - \theta(\Im a) \theta(\Im b) \theta(-\Im ab) \right]\,,
+\end{split}
+\end{equation}
+where $\theta$ is the Heaviside step function, and $a$ and $b$ are complex numbers. If $a$ (and/or $b$) is a negative real, one should prescribe $\Im a = i \, \epsilon$, where $\epsilon>0$. Thus in that case, we have $\theta(\Im a)=1$ and $\theta(-\Im a)=0$. For consistency, if $a$ is a positive real, we prescribe $\theta(\Im a)=0$ and $\theta(-\Im a)=1$.
+
+Useful consequences are:
+\begin{align}
+& \log(a b) = \log(a) + \log(b) \,, \text{ if $\Im a$ and $\Im b$ have different sign,}\\
+& \log(\frac{a}{b}) = \log(a) - \log(b) \,, \text{ if $\Im a$ and $\Im b$ have the same sign.}
+\end{align}
+
+Defining the square root as $\sqrt{a} \equiv \exp(\log(a)/2)$, we obtain the analogous expressions:
+\begin{equation}
+\begin{split}
+& \sqrt{a b} = s(a,b)\sqrt{a}\sqrt{b}\,, \\
+& s(a,b) \equiv \exp{\eta(a,b)/2} =(-1)^{\theta(- \Im a) \theta(- \Im b) \theta(\Im ab)} (-1)^{\theta(\Im a) \theta(\Im b) \theta(-\Im ab)}
+\,,
+\end{split}
+\end{equation}
+and specifically:
+\begin{align}
+& \sqrt{a b} = \sqrt{a}  \sqrt{b} \,, \text{ if $\Im a$ and $\Im b$ have different sign,}\\
+& \sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}\,, \text{ if $\Im a$ and $\Im b$ have the same sign.}
+\end{align}
+
+As a quick example, let us look at $\sqrt{-z}$.
+Applying the product rule in the numerator, we obtain:
+\begin{equation}
+\sqrt{-z} = s(-1,z)\, i \sqrt{z} =  (-1)^{\theta(\Im 1) \theta(- \Im z)} (-1)^{\theta(\Im -1) \theta(\Im z)} i \sqrt{z}\,,
+\end{equation}
+and using our prescription, we get $\theta(\Im -1) = 1$ and $\theta(\Im 1) = 0$, and our result simplifies to 
+\begin{equation}
+\sqrt{-z} = s(-1,z)\, i \sqrt{z} =  (-1)^{\theta(\Im z)} i \sqrt{z}\,,
+\end{equation}
+which means that $\sqrt{-z} = i\sqrt{z}$ only in the lower complex plane and in the positive real axis, while $\sqrt{-z} = -i\sqrt{z}$ in the upper complex plane and in the negative real axis.
+
+\subsection{Schwinger parametrization}
+Let us derive the Feynman parametrization for the bubble integral using Schwinger parameters. We will use two important (equivalent) identities:
+\begin{equation}
+\label{eq:schwinger1}
+  \frac{i}{A} = \int_0^\infty ds (1 + i\epsilon)\, \exp(i A (1 + i \epsilon)s)\,,
+\end{equation}
+if $\Im A >0$, and another analogous result
+\begin{equation}
+\label{eq:schwinger2}
+-\frac{i}{A} = \int_0^\infty ds (1 - i\epsilon)\, \exp(-i A(1 - i\epsilon) s)\,,
+\end{equation}
+if $\Im A <0$. We will constrain the value of $\epsilon$ in both cases to ensure the integrals are convergent. Eqs.~\eqref{eq:schwinger1} and \eqref{eq:schwinger2} are
+convergent for $\epsilon = 0$ but it will become important later that $\epsilon$ is positive and non-zero. Let us now consider the case of
+$\Im m > 0$. Eq.~\eqref{eq:schwinger1} is convergent if,
+\begin{align}
+\label{eq:cond1}
+  \Re\left[ i(\Re A + i \Im A)(1 + i\epsilon) \right] = -\Im A - \Re A \epsilon< 0.
+\end{align}
+Taking the form of $A$ to be $q^2 + m$, the conditions on the imaginary part of $A$ become the conditions on the imaginary part of
+$m$ since $q$ is real. Eq.~\eqref{eq:cond1} then becomes,
+\begin{align}
+  -\Im m - (q^2 + \Re m)\epsilon < 0,
+\end{align}
+which now depends on the sign of $\Re m$. If $\Re m < 0$,
+\begin{align}
+  \epsilon < \frac{\Im m}{\lvert \Re m \rvert},
+\end{align}
+where we are free to choose $\epsilon$ to be arbitrarily small but positive. If $\Re m > 0$,
+\begin{align}
+  \epsilon > -\frac{\Im m}{\Re m},
+\end{align}
+we are again free to choose $\epsilon_-$ to be arbitrarily small but positive.
+
+Now consider the case for $\Im m < 0$, then Eq.~\eqref{eq:schwinger2} is convergent if,
+\begin{align}
+  \Im m - (q^2 + \Re m)\epsilon < 0.
+\end{align}
+The inequality is bounded by the case when $q^2 = 0$, so if $\Re m < 0$,
+\begin{align}
+  \epsilon < \frac{\lvert \Im m\rvert}{\lvert \Re m\rvert},
+\end{align}
+and if $\Re m > 0$,
+\begin{align}
+  \epsilon > \frac{\Im m}{\Re m}.
+\end{align}
+In both cases, we are still free to take $\epsilon$ to be positive and arbitrarily small.
+
+
+
+
+
+
+
+\section{Bubble integral using Schwinger parameters}
+
+\subsection{Masses with the same imaginary part sign}
+\subsubsection{Finding a general expression for the integral}
+Looking at the bubble integral, we note that the imaginary parts of each term in the denominator is the same as the imaginary part of the corresponding mass. 
+Let us then first look at the case where both masses have a positive imaginary part. Using our identities, we obtain straightforwardly:
+\begin{equation}
+\label{eq:bubble}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{\pi^{3/2}} e^{i(q^2+M_1)s_1}e^{i((k-q)^2+M_2)s_2}\,.
+\end{equation}
+Simplifying this, we obtain:
+\begin{equation}
+\begin{split}
+B(k^2,M_1,M_2)&= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\int \frac{d^3q}{\pi^{3/2}} (1 + i\epsilon^1)(1 + i\epsilon^2)\\
+&\exp{i S_+ (q+ \frac{s_2(1 + i\epsilon^2)}{S_+}k)^2+i\frac{s_1 s_2(1 + i\epsilon^1)(1 + i\epsilon^2)}{S_+}k^2+ i (M_1 s_1(1 + i\epsilon^1) +M_2 s_2(1 + i\epsilon^2))}\,,
+\end{split}
+\end{equation}
+where $S_+= (1 + i\epsilon^1)s_1+(1 + i\epsilon^2)s_2$.
+
+We can then do 2 things that give the same result:
+\begin{itemize}
+\item We do directly the Gaussian integral in $q$, then do a change of variable $s_1 = \tau x$, $s_2 = \tau (1-x)$ and then integrate in $\tau$, or alternatively
+\item We do a change of variable $s_1 = \tau x$, $s_2 = \tau (1-x)$, integrate in $\tau$, and then do the $q$ integral in the standard dim reg way.
+\end{itemize} 
+
+Let us pick the first way for concreteness.
+We can now set $\epsilon^1=\epsilon^2=\epsilon$, and guarantee that the Gaussian integral converges (because we have $S_+ = s_1 + s_2 + i \tilde{\epsilon}$, where we redefined the $\epsilon$).
+After doing the Gaussian $q$ integral, and setting $\epsilon \to 0$ where no poles show up, we get
+\begin{equation}
+B(k^2,M_1,M_2)= - \int_0^\infty ds_1 \int_0^\infty ds_2\,\frac{1}{(- i(s_1+s_2+ i \epsilon))^{3/2}} \exp{i\frac{s_1 s_2}{s_1+s_2+i\epsilon}k^2+ i (M_1 s_1 +M_2 s_2)}\,,
+\end{equation}
+where we used the result
+\begin{equation}
+\label{eq:gauss}
+\int d^d q \exp(i a q^2) = \frac{\pi^{d/2}}{(-i a)^{d/2}}\,,
+\end{equation}
+if $\Im a > 0$.
+Now, doing the change of variable described before: $s_1 = \tau x$, $s_2 = \tau (1-x)$, and noting that the Jacobian of the transformation is $\tau$, we get
+\begin{equation}
+B(k^2,M_1,M_2)= - \frac{1}{(- i)^{3/2}} \int_0^1 dx \int_0^\infty d\tau\, \tau (\tau+i \epsilon)^{-3/2}  \exp{i \frac{\tau^2}{\tau+i \epsilon} x (1-x)k^2+ i \tau (M_1 x +M_2 (1-x))}\,,
+\end{equation}
+and since the integral is convergent when $\epsilon \to 0$, we get:
+\begin{equation}
+B(k^2,M_1,M_2)= - \frac{1}{(- i)^{3/2}} \int_0^1 dx \int_0^\infty d\tau\, \tau^{-1/2}  \exp{i \tau x (1-x)k^2+ i \tau (M_1 x +M_2 (1-x))}\,,
+\end{equation}
+and doing the $\tau$ integral yields the standard Feynman parameter integral:
+\begin{align}
+B(k^2,M_1,M_2)&= \frac{\Gamma(1/2)}{(- i)^{3/2}} \int_0^1 dx \frac{(-i)^{3/2}}{\sqrt{x (1-x)k^2+ M_1 x +M_2 (1-x)}}\\
+& = \sqrt{\pi}\int_0^1 dx \frac{1}{\sqrt{x (1-x)k^2+ M_1 x +M_2 (1-x)}} \,, \label{eq:Bsame}
+\end{align}
+which is our familiar Feynman integral.  
+Note that in this case the square root does not have any branch cut, because its argument always has a positive imaginary part, by hypothesis. We were thus able to find the Feynman parameter integral using Schwinger parameters for this case. For two masses with negative imaginary parts, the exact same steps apply, and we obtain the same result.
+
+Solving this integral yields:
+\begin{equation}
+\label{eq:Bfinalsame}
+B(k^2,M_1,M_2) =\frac{\sqrt{\pi}}{k} \left[ i \log \left(2 \sqrt{x (1-x) + m_1 x + m_2 (1-x)}+i (m_1-m_2-2 x+1)\right)\right]_{x=0}^{x=1} \,,
+\end{equation}
+where $m_1 = M_1/k^2$ and $m_2 = M_2/k^2$. To use this expression, we need to check if the argument of the $\log$ crosses its branch cut (the negative real axis). If it does, we need to add/subtract $2 \pi i$, depending on the direction of the crossing.
+
+\subsubsection{Analyzing the branch cut crossings}
+
+We can finally analyze under what conditions a log branch cut crossing happens. Let us define 
+\begin{equation}
+\label{eq:A}
+A(x, m_1, m_2) \equiv 2 \sqrt{x (1-x) + m_1 x + m_2 (1-x)}+i (m_1-m_2-2 x+1)\,,
+\end{equation}
+then, we have a branch cut crossing when $A(x, m_1, m_2) = -t$, where $t>0$, for $x \in ]0,1[$
+Solving for $x$ yields
+\begin{align}
+& 2\sqrt{x (1-x) + m_1 x + m_2 (1-x)}+i (m_1-m_2-2 x+1) = -t \\
+\label{eq:At}\Rightarrow\, & 2\sqrt{x (1-x) + m_1 x + m_2 (1-x)} = -t - i (m_1 - m_2 - 2 x +1) \\
+\Rightarrow\, & 4 x (1-x) + 4 m_1 x + 4 m_2 (1-x) = t^2 + 2 i t (m_1 - m_2 - 2 x +1) - (m_1 - m_2 - 2 x +1)^2 \\
+\Rightarrow\, & \Delta(m_1, m_2) = t^2 + 2 i t (m_1 - m_2 + 1) - 4 i t x  \,,
+\end{align}
+where
+\begin{equation}
+\begin{split}
+\Delta(m_1, m_2) &\equiv m_1^2-2 m_1 m_2+2 m_1+m_2^2+2 m_2+1 = (m_1-m_2)^2 + 2(m_1 + m_2) + 1\\
+& = (m_2 - m_1 + 1)^2 + 4 m_1 = (m_1 - m_2 + 1)^2 + 4 m_2\,.
+\end{split}
+\end{equation}
+which gives two constraints: one for the real part, and another for the imaginary part. The real part equation gives us directly $t$
+\begin{equation}
+t_\pm = \Im(m_1)-\Im(m_2)\pm\sqrt{\Delta(\Re(m_1), \Re(m_2))}\,,
+\end{equation}
+where $\Delta(\Re(m_1), \Re(m_2))>0$ in order for $t$ to be real.
+The imaginary part equation gives us the two possible solutions for $x$ corresponding to the two solutions for $t$:
+\begin{align}
+& x_+ = \frac{- 2 \Im(m_2) + (\Re(m_1)-\Re(m_2)+1) \sqrt{\Delta(\Re(m_1), \Re(m_2))}}{2 \left(\Im(m_1)-\Im(m_2)+\sqrt{\Delta(\Re(m_1), \Re(m_2))}\right)} \,,\\
+& x_- = \frac{- 2 \Im(m_2) - (\Re(m_1)-\Re(m_2)+1) \sqrt{\Delta(\Re(m_1), \Re(m_2))}}{2 \left(\Im(m_1)-\Im(m_2)-\sqrt{\Delta(\Re(m_1), \Re(m_2))}\right)}\,. \label{eq:xminus}
+\end{align}
+The solution for $x$ as a function of $t$ is
+\begin{equation}
+x_t = \frac{1}{2} + \frac{\Re(m_1-m_2) (-\Im(m_1)+\Im(m_2)+t)-\Im(m_1+m_2)}{2 t}
+\end{equation}
+However, only one of these solutions, $x_-$ corresponds to $A(x, m_1, m_2)$ being a real number. 
+One way to see this is by looking at Eq.~\eqref{eq:At}. Taking the real part of both sides, we see that $\Re(l.h.s.) > 0$ and that $\Re(r.h.s.) = \mp \sqrt{\Delta(\Re(m_1), \Re(m_2))}$, corresponding to $t_\pm$. Therefore only the solution $t_-$ (and thus $x_-$) corresponds to a positive real part, and can satisfy the equation.
+
+This means that there is at most one branch cut crossing of the $\log$ in Eq.~\eqref{eq:Bfinalsame}. In fact, there is a branch cut if $x_- \in ]0,1[$ and $t_- > 0$.
+
+Let us check what are the conditions that $m_1$ and $m_2$ have to satisfy in order for $x_- \in ]0,1[$ and $t_- > 0$. Solving $x_- > 0$ and $x_- < 1$ yields, respectively:
+\begin{align}
+\label{eq:im2}
+& \Im(m_2) < -\frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))} \\
+\label{eq:im1}
+& \Im(m_1) > \frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))}\,.
+\end{align}
+We can now identify two cases:
+\begin{itemize}
+\item If $1 + \Re(m_1) - \Re(m_2)> 0$, then, defining $\kappa \equiv \frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))} >0$, we have $\Im(m_1) > \kappa > 0$ and $\Im(m_2) < -\kappa < 0$. So if $1 + \Re(m_1) - \Re(m_2)> 0$, we do not have to worry about branch cuts if $\Im(m_1)$ and $\Im(m_2)$ have the same sign.
+
+\item If $1 + \Re(m_1) - \Re(m_2) < 0$, then, defining $\kappa \equiv -\frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))} >0$, we have $\Im(m_1) > -\kappa$ and $\Im(m_2) < \kappa$. This is possible to have if $\Im(m_1)$ and $\Im(m_2)$ have the same sign, while also keeping $t_- >0$ if $\Im(m_1 - m_2) > \sqrt{\Delta(\Re(m_1), \Re(m_2))}$.
+\end{itemize}
+
+
+Finally, we can prove that if there is a branch cut crossing, then it always goes in the same direction.
+To do this, we assume that $A(x, m_1, m_2)$ defined in Eq.~\eqref{eq:A} is equal to $-t$, where $t>0$. Differentiating $A$ with respect to $x$, we obtain:
+\begin{equation}
+\begin{split}
+\frac{dA}{dx} & = \frac{m_1-m_2-2 x+1}{\sqrt{x (m_1-m_2-x+1)+m_2}}-2 i \\
+& = \frac{m_1-m_2-2 x+1 - 2 i \sqrt{x (m_1-m_2-x+1)+m_2}}{\sqrt{x (m_1-m_2-x+1)+m_2}} \\
+& = -i \frac{A(x, m_1, m_2)}{\sqrt{x (m_1-m_2-x+1)+m_2}} \\
+& =  \frac{i t}{\sqrt{x (m_1-m_2-x+1)+m_2}}\,,
+\end{split}
+\end{equation}
+and, since $\Re(\sqrt{z}) \geq 0$, we obtain $\Re(t/\sqrt{x (m_1-m_2-x+1)+m_2}) \geq 0$. This implies that $\Im(dA/dx) > 0$ at the branch cut crossing, which shows that $A$ crosses the branch cut always from the negative imaginary plane to the positive imaginary plane, and thus that $\Im(A(1,m_1,m_2)) > 0$ and $\Im(A(0,m_1,m_2)) < 0$.
+
+Conversely, if $\Im(A(1,m_1,m_2)) > 0$ and $\Im(A(0,m_1,m_2)) < 0$, that means there was one, and only one (see above) crossing of the imaginary axis, at $x_{\rm cross}$. Let's call $-t \equiv A(x_{\rm cross},m_1,m_2)$. There is a branch cut crossing if $t>0$. At $x=x_{\rm cross}$,
+\begin{equation}
+\begin{split}
+&\frac{dA}{dx} = \frac{i t}{\sqrt{x (m_1-m_2-x+1)+m_2}}\\
+\Rightarrow\; & \Im\left(\frac{dA}{dx}\right) = t \Re\left(\frac{1}{\sqrt{x (m_1-m_2-x+1)+m_2}} \right) \\
+\Rightarrow\; & t = \frac{\Im\left(\frac{dA}{dx}\right)}{\Re\left(\frac{1}{\sqrt{x (m_1-m_2-x+1)+m_2}} \right)} >0\,,
+\end{split}
+\end{equation}
+therefore, we have necessarily a branch cut.
+This concludes the proof that 
+\begin{equation}
+\begin{split}
+&\Im(A(1,m_1,m_2)) > 0 \text{ and } \Im(A(0,m_1,m_2)) < 0 \\
+\Leftrightarrow & \text{ there is one, and only one, branch cut crossing between }x=0 \text{ and }x=1\,.
+\end{split}
+\end{equation}
+
+This means that, if $\Im(A(1,m_1,m_2)) > 0$ and $\Im(A(0,m_1,m_2)) < 0$, Eq.~\eqref{eq:Bfinalsame} becomes
+\begin{equation}
+\label{eq:Bfinalsamecut}
+B(k^2,M_1,M_2) =\frac{\sqrt{\pi}}{k} i\left\{\left[\log \left(2 \sqrt{x (1-x) + m_1 x + m_2 (1-x)}+i (m_1-m_2-2 x+1)\right)\right]_{x=0}^{x=1}-2\pi i \right\}\,.
+\end{equation}
+
+
+\subsection{Masses with opposite imaginary part sign}
+
+\subsubsection{Directly solving the integral}
+
+Let us focus now on the case where the two masses have a different sign in the imaginary part. For concreteness, we assume $\Im M_1 > 0$ and $\Im M_2 < 0$.
+
+In this case we need non-zero $\epsilon$ insertions with Eqs.~\eqref{eq:schwinger1} and \eqref{eq:schwinger2} since we will develop poles without them. Eq.~\eqref{eq:bubble} then becomes,
+\begin{align}
+ B(k^2, M_1, M_2) &= \int_0^\infty ds_1 ds_2\frac{d^3q}{\pi^{3/2}}(1 + i\epsilon^1)(1 - i\epsilon^2)\exp\Big( i S \times \left( q + \frac{k(1 - i\epsilon^2)s_2}{S} \right)^2 - i\frac{k^2(1+i\epsilon^1) s_1 (1-i\epsilon^2) s_2}{S} \nonumber \\
+&+ i\left( (1 + i\epsilon^1)s_1 M_1 - (k^2 + M_2)(1 - i\epsilon^2)s_2 \right) \Big),
+\end{align}
+where $S = (1 + i\epsilon^1)s_1 - (1-i\epsilon^2)s_2 = s_1 - s_2 + i \tilde{\epsilon}$. The $q$ integral will be convergent for $\epsilon^1 > 0$ and $\epsilon^2 > 0$. Doing the momentum integral and taking $\epsilon \rightarrow 0$ where possible, we obtain,
+\begin{align}
+  B(k^2, M_1,M_2) = \frac{1}{(-i)^{3/2}}\int ds_1ds_2\frac{1}{S^{3/2}}e^{iI}
+\end{align}
+where $I = M_1 s_1 - M_2 s_2 - k^2 s_1s_2/S$. Now we make the
+change of variables, $s_1 = \tau x$ and $s_2 = \tau(1-x)$ and also take $\epsilon^1 = \epsilon^2 = \epsilon$,
+\begin{align}
+  B(k^2,M_1,M_2) = \frac{1}{-i^{3/2}}\int^1_0dx\int^{\infty}_0d\tau \frac{\tau^{-1/2}}{(2x-1 + i\epsilon)^{3/2}}\exp\left( i\tau\left(
+      M_1 x - M_2(1-x) - \frac{k^2x(1-x)}{2x-1 + i\epsilon}
+  \right)\right)
+\end{align}
+The $\tau$ integration then gives,
+\begin{align}
+ B(k^2,M_1,M_2) =   -\sqrt{\pi}\int^1_0dx \frac{1}{(2x - 1 + i\epsilon)^{3/2}}\frac{1}{\sqrt{-\frac{k^2x(1-x)}{2x-1+ i\epsilon} + M_1x - M_2(1-x)}}.
+\end{align}
+We evaluate this integral by taking the principal value using the identity,
+\begin{align}
+  \frac{1}{X - X_0+ i\epsilon} = P.V.\frac{1}{X-X_0} - i\pi \delta  (X- X_0) .
+\end{align}
+We obtain,
+\begin{align}
+\label{eq:PVintegral}
+ B(k^2,M_1,M_2) = -\sqrt{\pi}\left(P.V. \int^1_0dx \frac{1}{2x - 1}\frac{1}{\sqrt{2x - 1}\sqrt{-\frac{k^2x(1-x)}{2x-1} + M_1x - M_2(1-x)}} -\frac{i \pi}{2} (-2 i) \right).
+\end{align}
+The principal value term can be evaluated by using $\arctan$ and carefully choosing a specific Riemann sheet.
+Specifically, one obtains:
+\begin{equation}
+\begin{split}
+B(k^2, M_1, M_2) = -\frac{\sqrt{\pi}}{k}&\left(-\frac{2 i \sqrt{- y_1} \sqrt{- y_2}}{\sqrt{2 y_1-1} \sqrt{1- 2 y_2} \sqrt{-(1 + 2(m_1 + m_2)) y_1 y_2}} \left[ \arctan \left(\frac{\sqrt{1-2 y_2} \sqrt{x -y_1}}{\sqrt{2 y_1-1} \sqrt{x - y_2}}\right)\right]_{x=0}^{x=1}\right. \\
+&\left. - \pi \right)\,,
+\end{split}
+\end{equation}
+where $y_1$ and $y_2$ are the roots of the second-degree polynomial $P(x)$ given by
+\begin{equation}
+P(x) = (x -1) x +(2 x -1)\, x \, m_1 +\left(2 x ^2-3 x +1\right) m_2\,,
+\end{equation}
+giving for $y_1$ and $y_2$:
+\begin{align}
+y_1 &= \frac{-\sqrt{m_1^2-2 m_1 m_2 + 2 m_1+m_2^2+2 m_2+1}+m_1+3 m_2+1}{2 (2 m_1+2 m_2+1)} \\
+y_2 &= \frac{\sqrt{m_1^2-2 m_1 m_2+2 m_1+m_2^2+2 m_2+1}+m_1+3 m_2+1}{2 (2 m_1+2 m_2+1)}\,.
+\end{align}
+Again, the crossings of the $\arctan$ branch cuts need to be taken into account carefully (by adding or subtracting $\pi$, or $\pi/2$ in the case the crossing happens exactly at $i$ or $-i$, for example when $x=1/2$).
+This expression agrees with the numerical momentum integral.
+
+\subsubsection{Relating this case with the case where masses have the same imaginary part sign}
+
+We can also take the expression in Eq.~\eqref{eq:PVintegral} and do a change of variable to put it in a more familiar form.
+Indeed, by introducing $\hat{x} \equiv \frac{x}{2 x - 1}$, we get the mapping
+\begin{equation}
+x \in \left[0,\frac12 - \frac{\epsilon}{4}\right] \cup \left[\frac12 + \frac{\epsilon}{4}, 1\right] \Rightarrow \hat{x} \in \left[0, \frac12 - \frac{1}{\epsilon}\right] \cup \left[\frac12 + \frac{1}{\epsilon}, 1\right]\,,
+\end{equation}
+with $\infty$ in $\hat{x}$ corresponding to $\frac{1}{2}$ in $x$. 
+Applying this change of variable to Eq.~\eqref{eq:PVintegral} yields:
+\begin{equation}
+\label{eq: Bdiffsign}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left(\int_0^{\frac12 - \frac{1}{\epsilon}} d\hat{x} \frac{i}{\sqrt{-\hat{x} (1-\hat{x})k^2 - M_1 \hat{x} - M_2 (1-\hat{x})}} + \int_{\frac12 + \frac{1}{\epsilon}}^{1} d\hat{x} \frac{1}{\sqrt{\hat{x} (1-\hat{x})k^2+ M_1 \hat{x} +M_2 (1-\hat{x})}} + \pi\right)\,,
+\end{equation}
+which is a very familiar integrand (see Eq.~\eqref{eq:Bsame}).
+
+We can further simplify this by noticing that 
+\begin{equation}
+s(-1, \hat{x} (1-\hat{x})k^2+ M_1 \hat{x} +M_2 (1-\hat{x})) = 1\,,
+\end{equation}
+if $x < 0$, $\Im(M_1) > 0$, and $\Im(M_2) > 0$ (because the second argument of $s$ always has a negative imaginary part in this case).
+Therefore, we can simplify \eqref{eq: Bdiffsign}, obtaining
+\begin{equation}
+\label{eq:Bdiffsign2}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left(\int_0^{\frac12 - \frac{1}{\epsilon}}  \frac{d\hat{x}}{\sqrt{\hat{x} (1-\hat{x})k^2 + M_1 \hat{x} + M_2 (1-\hat{x})}} + \int_{\frac12 + \frac{1}{\epsilon}}^{1}  \frac{d\hat{x}}{\sqrt{\hat{x} (1-\hat{x})k^2+ M_1 \hat{x} + M_2 (1-\hat{x})}} + \pi \right)\,.
+\end{equation}
+Now both components have the same integrand. Let us define
+\begin{align}
+&I \equiv \int_0^{\frac12 - \frac{1}{\epsilon}}  \frac{d\hat{x}}{\sqrt{\hat{x} (1-\hat{x}) + m_1 \hat{x} + m_2 (1-\hat{x})}} \,,\\ 
+&II \equiv \int_{\frac12 + \frac{1}{\epsilon}}^{1}  \frac{d\hat{x}}{\sqrt{\hat{x} (1-\hat{x}) + m_1 \hat{x} + m_2 (1-\hat{x})}}\,.
+\end{align}
+As written above in Eq.~\eqref{eq:Bfinalsame}, the antiderivative corresponding to $I$ and $II$ is
+\begin{equation}
+G(x) = i \log \left(2 \sqrt{x (1-x) + m_1 x + m_2 (1-x)}+i (m_1-m_2-2 x+1)\right)\,,
+\end{equation}
+where we have dropped the hat for clarity. Therefore, we have for $I + II$:
+\begin{equation}
+\label{eq:Bdiffsign3}
+\begin{split}
+&I + II = G(1) - G(0) + i \lim_{\epsilon \to 0} \left(\log \left(\frac{1}{4} i \epsilon  \Delta(m_1, m_2) \right) - \log \left(-\frac{1}{4} i \epsilon  \Delta(m_1, m_2) \right)\right)\,,
+\end{split}
+\end{equation}
+where
+\begin{equation}
+\Delta(m_1, m_2) = m_1^2-2 m_1 m_2+2 m_1+m_2^2+2 m_2+1\,.
+\end{equation}
+Simplifying Eq.~\eqref{eq:Bdiffsign3} yields
+\begin{equation}
+\label{eq:Bdiffsign4}
+\begin{split}
+I + II &= G(1) - G(0) + i \left(- \log(-1) -\eta(-1,\frac{1}{4} i \epsilon  \Delta(m_1, m_2)) \right)\\
+&= G(1) - G(0) + \pi - i \, \eta(-1, i \Delta(m_1, m_2))  \,,
+\end{split}
+\end{equation}
+so Eq.~\eqref{eq:Bdiffsign2} simplifies to
+\begin{equation}
+\label{eq:Bfinaldiff}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left[G(1) - G(0) + 2\pi - i \, \eta(-1, i \Delta(m_1, m_2)) \right]\,.
+\end{equation}
+Note that $i \, \eta$ is either $2\pi$ or 0.
+The simplified expression for $i \eta(-1, i \Delta(m_1, m_2))$ is:
+\begin{equation}
+i \eta(-1, i \Delta(m_1, m_2)) = 2  \pi \times \theta\left(\Re(\Delta(m_1,m_2)) \right)\,,
+\end{equation}
+where $\theta$ is the Heaviside theta function. Note that $\Re(\Delta(m_1,m_2)) = \Delta(\Re(m_1), \Re(m_2)) - (\Im(m_1 - m_2))^2$. 
+Notice also that Eq.~\eqref{eq:Bfinaldiff} is almost identical to Eq.~\eqref{eq:Bfinalsame}.
+
+
+Of course we have to take into account the branch cut crossings of the antiderivative that can occur in the integration region. We will deal with them now.
+
+Following the steps of the previous case where the imaginary part of the masses have the same sign, we verify that our only branch cut crossing happens at $x_-$ given by Eq.~\eqref{eq:xminus}.
+\begin{equation}
+x_- = \frac{- 2 \Im(m_2) - (\Re(m_1)-\Re(m_2)+1) \sqrt{\Delta(\Re(m_1), \Re(m_2))}}{2 \left(\Im(m_1)-\Im(m_2)-\sqrt{\Delta(\Re(m_1), \Re(m_2))}\right)}\,.
+\end{equation}
+The question here is whether $x_- < 0$ or $x_- > 1$ (while keeping $t_- > 0$). The constraints we get for $m_1$ and $m_2$ are analogous to the ones obtained in Eqs.~\eqref{eq:im2} and \eqref{eq:im1}:
+\begin{align}
+x_- < 0 \Rightarrow \quad & \Im(m_2) > -\frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))} \\
+x_- > 1 \Rightarrow \quad& \Im(m_1) < \frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))}\,.
+\end{align}
+As in the previous situation, we can now identify two cases:
+\begin{itemize}
+\item Case $1 + \Re(m_1) - \Re(m_2)> 0$: Defining $\kappa \equiv \frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))} >0$, we have $\Im(m_1) < \kappa $ or $\Im(m_2) > -\kappa $, both of which can satisfy the conditions $\Im(m_1)>0$ and $\Im(m_2)<0$. So if $\Im(m_1) - \Im(m_2) > \sqrt{\Delta(\Re(m_1), \Re(m_2))}$, there can be  branch cut crossings.
+
+\item Case $1 + \Re(m_1) - \Re(m_2) < 0$: Defining $\kappa \equiv -\frac{1}{2} (1 + \Re(m_1) - \Re(m_2)) \sqrt{\Delta(\Re(m_1), \Re(m_2))} >0$, we have $\Im(m_1) < -\kappa < 0$ and $\Im(m_2) > \kappa > 0$. So in this case it is impossible to satisfy the conditions $\Im(m_1)>0$ and $\Im(m_2)<0$. Also, $t_-$ is necessarily negative in this situation, so there can be no branch cut crossings.
+\end{itemize}
+
+Therefore, in order to have branch cut crossings for $\Im(m_1)>0$ and $\Im(m_2)<0$, we must have $\Re(m_2 - m_1) < 1$.
+
+Let us analyze other conditions for branch cuts.
+
+We can analyze how the imaginary part of $A(x,m_1,m_2)$ varies.
+Direct computation shows that (assuming $\Im(m_1)>0$ and $\Im(m_2)<0$) 
+\begin{equation}
+\begin{split}
+&A\left(\frac{1}{2} - \frac{1}{\epsilon},m_1,m_2\right) = \frac{1}{4} i \Delta(m_1,m_2) \epsilon + o(\epsilon^2) \,, \\
+&A\left(\frac{1}{2} + \frac{1}{\epsilon},m_1,m_2\right) = -\frac{1}{4} i \Delta(m_1,m_2) \epsilon + o(\epsilon^2)
+\end{split}
+\end{equation} 
+Thus, $\Im\left(A\left(\frac{1}{2} - \frac{1}{\epsilon},m_1,m_2\right)\right) = \frac{\epsilon}{4} \Re(\Delta(m_1,m_2)) $, and $\Im\left(A\left(\frac{1}{2} + \frac{1}{\epsilon},m_1,m_2\right)\right) = -\frac{\epsilon}{4} \Re(\Delta(m_1,m_2))$.
+Let us consider two possibilities: $\Re(\Delta(m_1,m_2)) > 0$ and $\Re(\Delta(m_1,m_2)) < 0$.
+\begin{itemize}
+\item Case $\Re(\Delta(m_1,m_2)) > 0$: 
+$\Im\left(A\left(-\infty, m_1, m_2\right)\right) > 0$ and $\Im\left(A\left(+\infty, m_1, m_2\right)\right) < 0$. To check if there are branch cut crossings in this situation, we can look at $t_-$. Specifically, the term $\sqrt{\Delta(\Re(m_1), \Re(m_2))}$:
+\begin{equation}
+\sqrt{\Delta(\Re(m_1), \Re(m_2))} = \sqrt{\Re(\Delta(m_1,m_2)) + (\Im(m_1-m_2))^2} > \Im(m_1) - \Im(m_2)\,,
+\end{equation}
+which implies that in this case $t_- < 0$ and so there are no branch cut crossings. So, we can have one of three possibilities for the position of $x_-$: $x_- < 0$, $0 < x_- < 1$, $x_- > 1$. For each one, we have:
+\begin{align*}
+x_- < 0: &\quad \Im\left(A\left(0, m_1, m_2\right)\right) < 0 \text{ and } \Im\left(A\left(1, m_1, m_2\right)\right) < 0\,, \\
+0 < x_- < 1: &\quad \Im\left(A\left(0, m_1, m_2\right)\right) > 0 \text{ and } \Im\left(A\left(1, m_1, m_2\right)\right) < 0 \,,\\
+x_- > 1: &\quad \Im\left(A\left(0, m_1, m_2\right)\right) > 0 \text{ and } \Im\left(A\left(1, m_1, m_2\right)\right) > 0 \,.
+\end{align*}
+Importantly, note that we never have $\Im\left(A\left(0, m_1, m_2\right)\right) < 0$ and $\Im\left(A\left(1, m_1, m_2\right)\right) > 0$ in this case.
+Thus, Eq.~\eqref{eq:Bfinaldiff} is simply given by 
+\begin{equation}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left[G(1) - G(0) \right]\,.
+\end{equation}
+
+\item Case $\Re(\Delta(m_1,m_2)) < 0$: 
+$\Im\left(A\left(-\infty, m_1, m_2\right)\right) < 0$ and $\Im\left(A\left(+\infty, m_1, m_2\right)\right) > 0$. To check if there are branch cut crossings in this situation, we can look at $t_- = \Im(m_1)-\Im(m_2) -\sqrt{\Delta(\Re(m_1), \Re(m_2))}$. Specifically, the term $\sqrt{\Delta(\Re(m_1), \Re(m_2))}$:
+\begin{equation}
+\sqrt{\Delta(\Re(m_1), \Re(m_2))} = \sqrt{\Re(\Delta(m_1,m_2)) + (\Im(m_1-m_2))^2}\,,
+\end{equation}
+so, if $\Re(\Delta(m_1,m_2)) > 0$, then $t_- < 0$, which implies there are no branch cut crossings. On the other hand, if $\Re(\Delta(m_1,m_2)) < 0$, then $t_- > 0$, which implies there is a branch cut crossing, as long as $\Delta(\Re(m_1), \Re(m_2)) > 0$.
+
+So, we can have one of three possibilities for the position of $x_-$: $x_- < 0$, $0 < x_- < 1$, $x_- > 1$. For each one, we have:
+\begin{align*}
+x_- < 0: &\quad \Im\left(A\left(0, m_1, m_2\right)\right) > 0 \text{ and } \Im\left(A\left(1, m_1, m_2\right)\right) > 0\,, \\
+0 < x_- < 1: &\quad \Im\left(A\left(0, m_1, m_2\right)\right) < 0 \text{ and } \Im\left(A\left(1, m_1, m_2\right)\right) > 0 \,,\\
+x_- > 1: &\quad \Im\left(A\left(0, m_1, m_2\right)\right) < 0 \text{ and } \Im\left(A\left(1, m_1, m_2\right)\right) < 0 \,.
+\end{align*}
+For $x_- < 0$ and $x_- > 1$, the branch cut crossing is in the integration region, so we need to take the crossing into account. In the two cases, it amounts to subtracting $2\pi$ from the expression inside the square brackets in Eq.~\eqref{eq:Bfinaldiff}. Therefore, for these situations, Eq.~\eqref{eq:Bfinaldiff} is simply given by 
+\begin{equation}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left[G(1) - G(0)\right]\,.
+\end{equation}
+
+For $0 < x_- < 1$, there is no branch cut crossing in the integration region, so Eq.~\eqref{eq:Bfinaldiff} becomes
+\begin{equation}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left[G(1) - G(0) + 2\pi\right]\,.
+\end{equation}
+\end{itemize}
+What is remarkable is that, regardless of the relative signs of $\Im(m_1)$ and $\Im(m_2)$, and combining these results with Eq.~\eqref{eq:Bfinalsamecut}, we always have that if $\Im(A(1,m_1,m_2)) > 0$ and $\Im(A(0,m_1,m_2)) < 0$, $B(k^2,M_1,M_2)$ is given by
+\begin{equation}
+\label{eq:Bfinalcut}
+B(k^2,M_1,M_2) =\frac{\sqrt{\pi}}{k} \left[i \log \left(2 \sqrt{m_1}+i (m_1-m_2-1)\right)-i \log \left(2 \sqrt{m_2}+i (m_1-m_2+1)\right) + 2\pi \right]\,,
+\end{equation}
+and in all other cases:
+\begin{equation}
+\label{eq:Bfinal}
+B(k^2,M_1,M_2) =\frac{\sqrt{\pi}}{k} \left[i \log \left(2 \sqrt{m_1}+i (m_1-m_2-1)\right)-i \log \left(2 \sqrt{m_2}+i (m_1-m_2+1)\right)\right]\,.
+\end{equation}
+This interesting observation makes $B(k^2,M_1,M_2)$ extremely efficient to evaluate numerically.
+
+\subsubsection{Relating the integrals using contour integration}
+
+This last expression Eq.~\eqref{eq:Bfinal} hints, by its simplicity, at some closer relation between the case where the masses have the same sign of the imaginary part and where they have opposite signs. Indeed, we can prove using contour integration that the two integrals are closely related.
+
+First, let us call $x_1$ and $x_2$ the roots of the second order polynomial $x (1-x) + m_1 x + m_2 (1-x)$.
+Then, we can write Eq.~\eqref{eq:Bdiffsign2} as
+\begin{equation}
+B(k^2,M_1,M_2) = \sqrt{\pi}\left(\int_0^{\frac12 - \frac{1}{\epsilon}}  \frac{dx}{\sqrt{(x_1 - x)(x - x_2)}} + \int_{\frac12 + \frac{1}{\epsilon}}^{1}  \frac{d\hat{x}}{\sqrt{(x_1 - x)(x - x_2)}} + \pi \right)\,.
+\end{equation}
+One can prove that, if $\Im(m_1)>0$, $\Im(m_2)<0$, and $\Re(m_i)>0$, then $\Im(x_1)>0$ and $\Im(x_2)>0$. 
+First, observe that $x_1 + x_2 = 1 + m_1 - m_2$ and that $x_1 x_2 = -m_2$. Taking the real and imaginary parts of each of those two equalities gives four equations with four unknows (the components of $x_1$ and $x_2$). One of them is $\Im(x_1 + x_2) = \Im(m_1 - m_2)$, which tells us that $\Im(x_1 + x_2)>0$.
+From $\Re(x_1+x_2) = 1 + \Re(m_1-m_2)$ and $\Im(x_1 x_2) = - \Im(m_2)$, we get
+\begin{align}
+&\Re(x_1) = \frac{\Im(x_1) (1 + \Re(m_1-m_2)) + \Im(m_2)}{\Im(x_1-x_2)} \,,\\
+&\Re(x_2) = \frac{-\Im(x_2) (1 + \Re(m_1-m_2)) - \Im(m_2)}{\Im(x_1-x_2)} \,,
+\end{align}
+and, pluging in $\Re(x_1 x_2) = -\Re(m_2)$ and using $\Im(x_1 + x_2) = \Im(m_1 - m_2)$, we get
+\begin{equation}
+\begin{split}
+\Im(x_1)\Im(x_2) &\left[(\Im(x_1-x_2))^2 + (1 + \Re(m_1-m_2))^2 + 4 \Re(m_2) \right] = -\Im(m_1)\Im(m_2) +\\
+& + \Re(m_1) \Im(m_2)(\Im(m_2) - \Im(m_1)) + \Re(m_2) \Im(m_1)(\Im(m_1) - \Im(m_2)) \,,
+\end{split}
+\end{equation}
+so if $\Re(m_i)>0$, then $\Im(x_1)\Im(x_2) > 0$. Combined with $\Im(x_1 + x_2)>0$, it implies that $\Im(x_1)>0$ and $\Im(x_2)>0$.
+
+
+
+
+Thus, we can separate the square roots in the two terms:
+\begin{equation}
+\sqrt{(x_1 - x)(x - x_2)} = \sqrt{x_1 - x}\sqrt{x - x_2}\,.
+\end{equation}
+Let us now define $f(z) = \sqrt{x_1 - z}\sqrt{z - x_2}$ for complex $z$. The function $f(z)$ has two horizontal branch cuts in the upper imaginary plane, but in the lower imaginary plane $f$ is analytic. Thus, by using a contour constituted of the real line and a lower semi-circle $C$, we find that
+\begin{align}
+&\int_{-\infty}^{\infty}  \frac{dx}{\sqrt{x_1 - x}\sqrt{x - x_2}} + \int_0^\pi d\theta\frac{(-i) e^{-i \theta }}{\sqrt{-e^{-i \theta }} \sqrt{e^{-i \theta }}} = 0 \\
+\Rightarrow & \int_{-\infty}^{\infty}  \frac{dx}{\sqrt{x_1 - x}\sqrt{x - x_2}} = \pi \\
+\Rightarrow & \int_{0}^{1}  \frac{dx}{\sqrt{x_1 - x}\sqrt{x - x_2}} = \pi + \int_{0}^{-\infty}  \frac{dx}{\sqrt{x_1 - x}\sqrt{x - x_2}} + \int_{\infty}^{1}  \frac{dx}{\sqrt{x_1 - x}\sqrt{x - x_2}}\,,
+\end{align}
+and therefore, when $\Im(m_1)>0$, $\Im(m_2)<0$, and $\Re(m_i)>0$, we obtain:
+\begin{equation}
+B(k^2,M_1,M_2) = \sqrt{\pi} \,\int_0^{1}  \frac{dx}{\sqrt{x_1 - x}\sqrt{x - x_2}} = \sqrt{\pi} \,\int_0^{1}  \frac{dx}{\sqrt{(x_1 - x)(x - x_2)}}\,,
+\end{equation}
+which is exactly Eq.~\eqref{eq:Bsame}.
+Note that the requirement $\Re(m_i) > 0$ is important in this case. In general, there could be a crossing of a branch cut between $x=0$ and $x=1$ if $\Im(m_1)>0$ and $\Im(m_2)<0$. So the two cases are indeed closely related. We will use similar argument to simplify the triangle integral
+
+\section{Triangle integral with Schwinger parameters}
+Let us compute the triangle integral,
+\begin{align}
+  T(k^2_1, k^2_2, M_1, M_2, M_3) = \int \frac{d^3q}{\pi^{3/2}}\frac{1}{((\vec{k}_1 - \vec{q})^2 + M_1) (q^2 + M_2)( (\vec{k}_2 +
+\vec{q})^2 + M_3)}
+\end{align}
+in a similar way to the bubble integral. 
+
+\subsection{Case where the imaginary part of the masses have the same sign}
+\label{sec:same}
+First let us consider the case of all three masses $M_1, M_2$ and $M_3$ having positive imaginary parts. Using Schwinger parameterization,
+the momentum integral becomes,
+\begin{align}
+\begin{split}
+  T(\dots) = \frac{i}{\pi^{3/2}}\int_0^{+\infty} & \prod ds_i\int_q(1+i\epsilon_1)(1 + i\epsilon_2)(1 + i\epsilon_3)\\
+& \exp\left[ i\left( (\vec{k}_1 - \vec{q})^2 + M_1
+  \right)(1 + i\epsilon_1)s_1 + i(q^2 + M_2)(1 + i\epsilon_2)s_2 + i\left( (\vec{k}_2 + \vec{q})^2 + M_3 \right)(1 + i\epsilon_3)s_3
+\right].
+\end{split}
+\end{align}
+Expanding the exponent,
+\begin{align}
+&  (1 + i\epsilon_1)s_1(k^2_1 + q^2 - 2k_1\cdot q + M_1) + (1 + i\epsilon_2)s_2(q^2 + M_2) + (1 + i\epsilon_3)s_3(k^2_2 + q^2 + 2k_2\cdot q +
+  M_3)\\
+& = q^2\left[ (1 + i\epsilon_1)s_1 + (1 + i\epsilon_2)s_2 + (1 + i\epsilon_3)s_3 \right] - 2q\cdot\left[ k_1(1 + i\epsilon_1)s_1 -
+  k_2(1 + i\epsilon_3)s_3 \right] + (1 + i\epsilon_1)s_1(k^2_1 + M_1)\nonumber \\
+& \qquad  + (1 + i\epsilon_2)s_2M_2 + (1 + i\epsilon_3)s_3(k^2_2 + M_3)\\
+&  = S\left( q^2 - 2q\cdot\frac{(1 + i\epsilon_1)s_1k_2 - (1 + i\epsilon_3)s_3k_2}{S} \right) + (1 + i\epsilon_1)s_1(k^2_1 + M_1) +
+  (1 + i\epsilon_2)s_2M_2 + (1 + i\epsilon_3)s_3(k^2_2 + M_3)\\
+&  = S\left( q - \frac{s_1k_1 - s_3k_2}{S} \right)^2 - \frac{(s_1k_1 - s_3k_2)^2}{S} + s_1k^2_1 + s_3k^2_2 + s_1M_1 + s_2M_2 + s_3M_3\\
+&  = S(\dots)^2 - \frac{s^2_1k^2_1 - 2s_1s_3k_1\cdot k_2+ s^2_3k^2_2}{S} + (s_1 + s_2 + s_3)(s_1k^2_1 + s_3k^2_2)/S + s_1M_1 + s_2M_2 + s_3M_3\\
+&  = S(\dots)^2  + \frac{s_1s_3k^2_3 + s_1s_2k^2_1 + s_2s_3k^2_2}{s_1 + s_2 + s_3} + s_1M_1 + s_2M_2 + s_3M_3
+\end{align}
+where we take the limit $\epsilon_i \rightarrow 0$ where no singularities appear and define $S = s_1 + s_2 + s_3 + i \tilde{\epsilon}$, and use $\vec{k}_1 +
+\vec{k}_3 + \vec{k}_3 = 0$. Doing the Gaussian integral in $q$, we obtain,
+\begin{align}
+  T = \frac{i}{(-i)^{3/2}}\int_0^{+\infty} ds_1 ds_2 ds_3\frac{e^{iI}}{S^{3/2}}
+\end{align}
+where $I = (s_1s_2k^2_1 + s_3s_1k^2_3 + s_2s_3k^2_2)/S + s_1M_1 + s_2M_2 + s_3M_3$. Changing integration variables $s_1 = \tau x_1, s_2 =
+\tau x_2, s_3 = \tau(1 - x_1 - x_2) = \tau x_3$, where $\tau \in [0,+\infty[$, $x_1 \in [0,1]$, $x_2 \in [0,1]$, and $x_1 + x_2 < 1$, and observing that the Jacobian is $\tau^2$, we obtain
+\begin{align}
+  T = -\frac{1}{(-i)^{1/2}}\int_0^1 dx_1 dx_2 \int_0^{+\infty}d\tau \tau^{1/2}e^{i\tau \tilde{I}}\,,
+\end{align}
+where we defined $\tilde{I} = x_1 x_2 k^2_1 + x_2 x_3 k^2_2 + x_1 x_3 k^2_3 + x_1 M_1 + x_2 M_2 + x_3 M_3$ 
+Doing the $\tau$ integral,
+\begin{align}
+  T = \frac{\sqrt{\pi}}{2}\int dx_1 dx_2\tilde{I}^{-3/2}.
+\end{align}
+Next, we make another change of variables $x_2  = (1 - x)y,\, x_1 = x$, obtaining
+\begin{align}
+T&=\frac{\sqrt{\pi}}{2}\int_0^1 \frac{dx dy (1-x)}{\left( M_1 x +  M_2 y (1-x) + M_3 (1-y) (1-x) + k^2_1 x y (1-x) + k^2_2 (1-x)^2 y (1-y) + k^2_3 x (1-x)(1-y) \right)^{3/2}}\\
+& = \frac{\sqrt{\pi}}{2}\int_0^1 \frac{dx dy (1-x)}{\left(-ay^2 + by + c \right)^{3/2}}\,, \label{eq:Tsame}
+\end{align}
+where $a = k_2^2 (1-x)^2$, $b = (1-x)(k_2^2 + M_2 - M_3+x(k_1^2-k_2^2-k_3^2))$, and $c = M_3(1-x) + k_3^2 x (1-x) + M_1 x$.
+Doing the indefinite integral in $y$, we get:
+\begin{equation}
+T(k^2_1, k^2_2, k^2_3, M_1, M_2, M_3) =\frac{\sqrt{\pi}}{2}\int_0^1 dx \left.\frac{2(1-x) (2 a y - b)}{\left(b^2 + 4 a c\right) \sqrt{-ay^2 + by + c}}\right|^{y = 1}_{y = 0}\,,
+\end{equation}
+valid if $b^2 + 4 a c \neq 0$. If $b^2 + 4 a c = 0$, we obtain
+\begin{equation}
+T(k^2_1, k^2_2, k^2_3, M_1, M_2, M_3) =\frac{\sqrt{\pi}}{2}\int_0^1 dx \left.\frac{2 (x-1)}{(b-2 a y) \sqrt{-\frac{(b-2 a y)^2}{a}}}\right|^{y = 1}_{y = 0}\,.
+\end{equation}
+
+
+Let us consider the case $b^2 + 4 a c \neq 0$.
+Replacing the values of $a$, $b$, and $c$, and rearranging, we obtain:
+\begin{align}
+  T(x, y, k^2_1, k^2_2, k^2_3, M_1, M_2, M_3) = \frac{\sqrt{\pi}}{2}\int dx \left.\frac{N_1 x + N_0}{\sqrt{R_2 x^2 + R_1 x + R_0}\left(S_2 x^2 + S_1 x + S_0\right)}\right|^{y = 1}_{y = 0}
+\end{align}
+where $N_1, N_0, R_2, R_1, R_0, S_2, S_1, S_0$ are functions of $y$, independent of $x$, given by:
+\begin{align*}
+N_1 &= - 2 k_1^2+ 2 (1-2y) k_2^2 + 2 k_3^2\\
+N_0 &= -2 M_2 + 2 M_3 + 2 k_2^2 (-1+2y) \\
+R_2 &= k_3^2 (-1 + y) - k_1^2 y + k_2^2 (1 - y) y\\
+& = k_3^2 (-1 + y) - k_1^2 y \\
+R_1 &= k_1^2 y+ 2 k_2^2 y\left(y-1\right)+(1-y) k_3^2 + M_1 - M_2 y+M_3 (y-1) \\
+&= k_1^2 y +(1-y) k_3^2 + M_1 - M_2 y+M_3 (y-1)\\
+R_0 &= M_3 (1-y) + k_2^2 y (1-y) + M_2 y \\
+&= M_3 (1-y) + M_2 y \\
+S_2 &= k_1^4-2 k_1^2 (k_2^2+k_3^2)+(k_2^2-k_3^2)^2 \\
+S_1 &= 2 \left(k_1^2 (k_2^2+M_2-M_3)-k_2^4+k_2^2 (k_3^2+2 M_1-M_2-M_3)+k_3^2 (M_3-M_2)\right) \\
+S_0 &= k_2^4+2 k_2^2 (M_2+M_3)+(M_2-M_3)^2\,,
+\end{align*}
+where for the second equality in $R_2$, $R_1$, and $R_0$ we have used the fact that $y$ is either 1 or 0.
+
+
+
+
+Before integrating $T$ we can put it in a simplified form, by factoring the second order polynomials:
+\begin{align}
+  T &=  \frac{\sqrt{\pi}}{2}\int_0^1 dx \left. \frac{N_1 x + N_0}{\sqrt{R_2(x - y_+)(x - y_-)}S_2(x - x_+)(x - x_-)} \right|^{y = 1}_{y = 0}\\
+&= \frac{\sqrt{\pi}}{2}\int_0^1 dx \left. \frac{1}{\sqrt{R_2(x - y_+)(x - y_-)}}\left(\frac{N_0+N_1 x_+}{S_2(x - x_+)(x_+ - x_-)} - \frac{N_0+N_1 x_-}{S_2(x - x_-)(x_+ - x_-)}\right) \right|^{y = 1}_{y = 0} \\
+&= \frac{\sqrt{\pi}}{2}\int_0^1 dx \left. \frac{c_1}{\sqrt{R_2(x - y_+)(x - y_-)}(x-x_+)}+\frac{c_2}{\sqrt{R_2(x - y_+)(x - y_-)}(x-x_-)} \right|^{y = 1}_{y = 0} \,, 
+\end{align}
+where $c_1 = \frac{N_0+N_1 x_+}{S_2(x_+ - x_-)}$ and $c_2 = - \frac{N_0+N_1 x_-}{S_2(x_+ - x_-)}$. Defining $F_{\rm int}$ as 
+\begin{equation}
+F_{\rm int}(R_2, y_+, y_-, x_0) = \frac{\sqrt{\pi}}{2}\int_0^1 dx \frac{1}{\sqrt{R_2(x - y_+)(x - y_-)}(x-x_0)}\,,
+\end{equation}
+we can write $T$ as 
+\begin{align}  
+T &= \left.c_1 F_{\rm int}(R_2, y_+, y_-, x_+) + c_2 F_{\rm int}(R_2, y_+, y_-, x_-)\right|^{y = 1}_{y = 0}\,.
+\end{align}
+Note that this approach is only valid for $S_2 \neq 0$. The case $S_2$ corresponds to totally squeezed triangles satisfying $|k_3| = ||k_1| \pm |k_2||$ or $k_3 = 0$.
+The evaluation of $F_{\rm int}$ is discussed in Section~\ref{sec:Fint}.
+
+\subsection{Case where all masses have positive real part}
+Let us consider the case of $\left\{ \Re(M_1),\Re(M_2),\Re(M_3) \right\} > 0$. In this case we can choose the Schwinger parameterization,
+\begin{align}
+  \frac{1}{A} = \int^{\infty}_0ds \exp(-As)
+\end{align}
+for $\Re(A)>0$. In this case, the triangle integral can be written as,
+\begin{align}
+  T(k^2_1,k^2_2,M_1,M_2,M_3) = \int_{q}\int \prod ds_i \exp\left[ -\left((\vec{k}_1 - \vec{q})^2 + M_1\right)s_1 - (q^2 + M_2)s_2 - \left(
+  (\vec{k}_2 - \vec{q})^2 + M_3 \right)s_3 \right].
+\end{align}
+Since if $\left\{ \Re(M_1),\Re(M_2),\Re(M_3) \right\}> 0$, $\Re(A)>0$. Expanding the exponential,
+\begin{align}
+  -(s_1 + s_2 + s_3)\left( q^2 - 2q\cdot\frac{s_1k_1 - s_3k_2}{s_1 + s_2 + s_3} \right) - s_1k^2_1 - s_1M_1 - s_2M_2 - s_3k^2_2 - s_3M_3\\
+  = -(s_1 + s_2 + s_3)\left(q - \frac{s_1k_1 - s_3k_2}{s_1 + s_2 + s_3}\right)^2 + \frac{(s_1k_1 - s_3k_2)^2}{s_1 + s_2 + s_3} -s_1k^2_1 - s_3k^2_2 -
+  s_1M_1 - s_2M_2 - s_3M_3\\
+  = -(s_1 + s_2 + s_3)\left( q - \frac{s_1k_1 - s_3k_2}{s_1 + s_2 + s_3} \right)^2 - \frac{s_1s_3k^2_3 + s_1s_2k^2_1 +
+  s_2s_3k^2_2}{s_1 + s_2 + s_3} - s_1M_1 - s_2M_2 - s_3M_3
+\end{align}
+We can perform the Gaussian integral as $s_1 + s_2 + s_3 > 0$. After the Gaussian integral in $q$, we make the change of variables $s_1 = \tau x_1, s_2 = \tau x_2, s_3 = \tau(1 - x_1 - x_2) = \tau x_3$,
+\begin{align}
+  \int dx_1dx_2\tau^2\frac{\exp\left[ -\tau\frac{x_1x_3k^2_3 + x_1x_2k^2_1 + x_2x_3k^2_2}{x_1 + x_2 + x_3} - \tau x_1M_1 - \tau x_2M_2 - \tau x_3M_3
+  \right]}{(\tau x_1 + \tau x_2 + \tau x_3)^{3/2}}\\
+  = \frac{\sqrt{\pi}}{2}\int dx_1dx_2 \frac{1}{\left(x_1(1 - x_1 - x_2)k^2_3 + x_1x_2k^2_1 + x_2(1 - x_1 - x_2)k^2_2 + x_1M_1 + x_2M_2 +
+  (1 - x_1 - x_2)M_3\right)^{3/2}}
+\end{align}
+where in the last line we performed the $\tau$ integration. We now arrive at the same integral as the case when $M_1, M_2$ and $M_3$ having
+positive imaginary parts.
+
+\subsection{Case where the imaginary part of the masses have the opposite sign}
+\label{sec:opposite}
+Let us consider the case of two masses $M_1$ and $M_2$ having positive imaginary parts and $M_3$ having a negative imaginary part. 
+\begin{align}
+T(\dots) &= -i\int \prod ds_i \int_q (1 + i\epsilon_1)(1 + i\epsilon_2)(1 - i\epsilon_3) \times \nonumber \\
+  &\exp\left[ i\left( (k_1 - q)^2 + M_1\right)(1 + i\epsilon_1)s_1 + i\left( q^2 + M_2 \right)(1 + i\epsilon_2)s_2 - i\left( (k_2 + q)^2 +
+  M_3 \right)(1 - i\epsilon_3)s_3 \right]
+\end{align}
+Expanding the exponent (factoring out an $i$),
+\begin{align}
+&  (1 + i\epsilon_1)s_1(k^2_1 + q^2 - 2k_1\cdot q + M_1) + (1 + i\epsilon_2)s_2(q^2 + M_2) - (1 - i\epsilon_3)s_3(k^2_2 + q^2 + 2k_2\cdot q +
+  M_3)\\
+& = q^2\left[ (1 + i\epsilon_1)s_1 + (1 + i\epsilon_2)s_2 - (1 - i\epsilon_3)s_3 \right] - 2q\cdot\left[k_1(1 + i\epsilon_1)s_1 +
+  k_2(1 - i\epsilon_3)s_3  \right] + (1 + i\epsilon_1)s_1(k^2_1 + M_1) \nonumber \\
+ &\qquad  + (1 + i\epsilon_2)s_2M_2 - (1-i\epsilon_3)s_3(k^2_2 + M_3)\\
+& = S_- \left( q^2 - 2q\cdot \frac{(1 + i\epsilon_1)s_1k_1 + (1 - i\epsilon_3)s_3k_2}{S_-}\right) + (1 + i\epsilon_1)s_1(k^2_1+M_1) + (1 +  i\epsilon_2)s_2M_2 - (1 - i\epsilon_3)s_3(k^2_2+M_3)\\
+& =S_-\left(q - \frac{s_1k_1 + s_3k_2}{S_-}\right)^2 - \frac{\left[s_1k_1 + s_3k_2 \right]^2}{S_-} + s_1k^2_1 - s_3k^2_2 + s_1M_1 + s_2M_2 -  s_3M_3\\
+&= S_-(\dots)^2 - \frac{s^2_1k^2_1 + 2s_1s_3k_1\cdot k_2 + s^2_3k^2_2}{S_-} + (s_1 + s_2 - s_3)(s_1k^2_1 - s_3k^2_2)/S_- + s_1M_1 + s_2M_2 - s_3M_3\\
+&= S_-(\dots)^2 - \frac{2s_1s_3k_1\cdot k_2 + s_1s_3k^2_2 - s_1s_2k^2_1 + s_2s_3k^2_2 + s_1s_3k^2_1}{S_-} + s_1M_1 + s_2M_2 - s_3M_3\\
+&= S_-(\dots)^2 + \frac{s_1s_2k^2_1 - s_1s_3k^2_3 - s_2s_3k^2_2}{S_-} + s_1M_1 + s_2M_2 - s_3M_3
+\end{align}
+where we take the limit $\epsilon_i \rightarrow 0$ where no singularities appear and redefine $S_- = s_1 + s_2 - s_3 + i\tilde{\epsilon}$.
+After the Gaussian integral we obtain,
+\begin{align}
+  T = \frac{-i}{(-i)^{3/2}}\int ds_1ds_2 \frac{1}{S_-^{3/2}}e^{iI}
+\end{align}
+where $I = (s_1s_2k^2_1 - s_3s_1k^2_3 - s_2s_3k^2_2)/S_- + s_1M_1 + s_2M_2 - s_3M_3$. Changing variables to $s_1 = \tau x_1, s_2 = \tau x_2, s_3
+= \tau (1 - x_1 - x_2) = \tau x_3$, and noting that the Jacobian is $\tau^2$, we get:
+\begin{align}
+  T = \frac{1}{(-i)^{1/2}}\int dx_1dx_2d\tau \frac{\tau^{1/2}}{\left(2(x_1 + x_2) - 1 + i\tilde{\epsilon}\right)^{3/2}}e^{i\tau
+  \tilde{I}}
+\end{align}
+where $\tilde{I} = \frac{x_1x_2k^2_1 - x_2x_3k^2_2 - x_1x_3k^2_3}{2(x_1 + x_2) - 1 + i\tilde{\epsilon}} + x_1M_1 + x_2M_2 - x_3M_3$. Doing
+the $\tau$ integral yields,
+\begin{align}
+  T = -\frac{\sqrt{\pi}}{2}\int^1_0dx_1dx_2 dx_3\delta(1-\sum x_i)\left( x_1 + x_2 - x_3 + i\tilde{\epsilon} \right)^{-3/2}\tilde{I}^{-3/2}
+\end{align}
+
+Again evaluating this integral with the principal value,
+\begin{align}
+  T = -\frac{\sqrt{\pi}}{2}\int_0^1 dx_1dx_2dx_3\delta(1-\sum x_i)\left( P.V. \frac{1}{x_1 + x_2 - x_3} - \frac{i\pi}{2}\delta(x_2 + x_1 -
+  \frac{1}{2}) \right)(x_1 + x_2 - x_3 + i\epsilon)^{-1/2}\tilde{I}^{-3/2}\,.
+\end{align}
+The term not involving the principal value can be easily evaluated:
+\begin{align}
+T &= -\frac{\sqrt{\pi}}{2}\int_0^1 dx_1dx_2dx_3\delta(1-\sum x_i)\left( - \frac{i\pi}{2}\delta(x_2 + x_1 -
+  \frac{1}{2}) \right)(x_1 + x_2 - x_3 + i\epsilon)^{-1/2}\tilde{I}^{-3/2} \\
+&=  -\frac{\sqrt{\pi}}{2}\int_0^1 dx_1dx_2 \left( - \frac{i\pi}{2}\delta(x_2 + x_1 -
+  \frac{1}{2}) \right)(2(x_1 + x_2) - 1 + i\epsilon)^{-1/2}\tilde{I}^{-3/2} \\
+&= -\frac{\sqrt{\pi}}{2}\int_0^1 dx_1 \left( - \frac{i\pi}{2}\right)(i\epsilon)^{-1/2}(\frac{x_1 x_2 k^2_1 - x_2 x_3 k^2_2 - x_1 x_3 k^2_3}{i \epsilon} + x_1M_1 + x_2M_2 - x_3M_3)^{-3/2} \\
+&\underset{\epsilon\to 0}{=} o(\epsilon)\,,
+\end{align}
+which means it is just 0.
+So we are left with
+\begin{equation}
+  \label{eq:trimxy}
+  T = -\frac{\sqrt{\pi}}{2}P.V.\int_0^1 dx_1dx_2dx_3 \delta(1-\sum x_i)\frac{1}{x_1 + x_2 - x_3}\frac{1}{\sqrt{x_1 + x_2 - x_3 + i\epsilon}}
+  \tilde{I}^{-3/2}\,,
+\end{equation}
+which in fact is a convergent integral (no need of the principal value). 
+For later convenience, let us write explicitly the integration region in the plane $x_1$-$x_2$:
+\begin{equation}
+R = \int_0^1 dx_1dx_2dx_3 \delta(1-\sum x_i) = \int_0^{\frac{1}{2}} dx_1 \int_0^{\frac{1}{2}-x_1} dx_2 + \int_0^{\frac{1}{2}} dx_1 \int_{\frac{1}{2}-x_1}^{1-x_1} dx_2 + \int_{\frac{1}{2}}^{1} dx_1 \int_{0}^{1-x_1} dx_2 
+\end{equation}
+
+
+We can then make the following substitutions, $\tilde{x}_1 = \frac{x_1}{2(x_1 + x_2) - 1}, \tilde{x}_2 = \frac{x_2}{2(x_1 + x_2) - 1}$ (note that the Jacobian is $\frac{1}{(1-2(\tilde{x}_1 + \tilde{x}_2))^3}$). 
+The region of integration is $\{\tilde{x}_1 \tilde{x}_2 > 0\} \setminus \{(\tilde{x}_1>0) \wedge (\tilde{x}_2>0) \wedge (\tilde{x}_1 + \tilde{x}_2 < 1)\}$, that is the first and third quadrants except the triangle whose vertices are (0,0), (0,1) and (1,0)
+First, let us see how $R$ is expressed:
+\begin{equation}
+\begin{split}
+R &= \int_{-\infty}^0 d\tilde{x}_1 \int_{-\infty}^0 \frac{d\tilde{x}_2}{(1-2(\tilde{x}_1 + \tilde{x}_2))^3} 
++ \int_0^\frac{1}{2} d\tilde{x}_1 \int_{1-\tilde{x}_1}^{+\infty} \frac{d\tilde{x}_2}{(2(\tilde{x}_1 + \tilde{x}_2)-1)^3} + \\
+& + \int_{\frac{1}{2}}^{+\infty} d\tilde{x}_1 \int_{\frac{1}{2}}^{+\infty} \frac{d\tilde{x}_2}{(2(\tilde{x}_1 + \tilde{x}_2)-1)^3} + \int_{\frac{1}{2}}^1 d\tilde{x}_1 \int_{1-\tilde{x}_1}^{\frac{1}{2}} \frac{d\tilde{x}_2}{(2(\tilde{x}_1 + \tilde{x}_2)-1)^3} + \int_{1}^{+\infty} d\tilde{x}_1 \int_{0}^{\frac{1}{2}} \frac{d\tilde{x}_2}{(2(\tilde{x}_1 + \tilde{x}_2)-1)^3} \\
+&= \int_{-\infty}^0 d\tilde{x}_1 \int_{-\infty}^0 \frac{d\tilde{x}_2}{(1-2(\tilde{x}_1 + \tilde{x}_2))^3} + \left(\int_0^1 d\tilde{x}_1 \int_{1-\tilde{x}_1}^{+\infty} + \int_{1}^{+\infty} d\tilde{x}_1 \int_{0}^{+\infty}\right) \frac{d\tilde{x}_2}{(2(\tilde{x}_1 + \tilde{x}_2)-1)^3}\,.
+\end{split}
+\end{equation}
+Our new expression for $T$ becomes: 
+\begin{align}
+\begin{split}
+T &=  -\frac{\sqrt{\pi}}{2}\int d\tilde{x}_1 d\tilde{x}_2 \left|\frac{1}{(1-2(\tilde{x}_1 + \tilde{x}_2))^3}\right|\left(\frac{1}{2(\tilde{x}_1 + \tilde{x}_2) - 1}\right)^{-3/2} \left(\frac{ \tilde{I}}{2 (\tilde{x}_1+ \tilde{x}_2)-1} \right)^{-3/2}
+\end{split}\\
+\begin{split}
+\Rightarrow T &=  -\frac{\sqrt{\pi}}{2}\left(-\int_{-\infty}^0 d\tilde{x}_1 \int_{-\infty}^0 d\tilde{x}_2 + \int_0^1 d\tilde{x}_1 \int_{1-\tilde{x}_1}^{+\infty} + \int_{1}^{+\infty} d\tilde{x}_1 \int_{0}^{+\infty}d\tilde{x}_2 \right) \\
+& \qquad \qquad \left(\frac{1}{2(\tilde{x}_1 + \tilde{x}_2) - 1}\right)^{3/2}
+\left( \frac{\tilde{I}}{2 (\tilde{x}_1+ \tilde{x}_2)-1} \right)^{-3/2}\,,
+\end{split} \\
+\begin{split}
+\Rightarrow T &=  \frac{\sqrt{\pi}}{2}\left(\int_{-\infty}^0 d\tilde{x}_1 \int_{-\infty}^0 d\tilde{x}_2 \right) 
+\frac{(-i)}{(1-2(\tilde{x}_1 + \tilde{x}_2) )^{3/2}} \left(\frac{(-i)}{(1-2(\tilde{x}_1 + \tilde{x}_2) )^{3/2}}\right)^{-1} \tilde{I}^{-3/2} \\
+&- \frac{\sqrt{\pi}}{2}\left(\int_0^1 d\tilde{x}_1 \int_{1-\tilde{x}_1}^{+\infty} + \int_{1}^{+\infty} d\tilde{x}_1 \int_{0}^{+\infty}d\tilde{x}_2 \right) 
+\frac{1}{(2(\tilde{x}_1 + \tilde{x}_2)-1 )^{3/2}} \left(\frac{1}{(2(\tilde{x}_1 + \tilde{x}_2)-1 )^{3/2}}\right)^{-1} \tilde{I}^{-3/2}
+\end{split}\\
+\begin{split}
+\Rightarrow T &=  \frac{\sqrt{\pi}}{2}\left(\int_{-\infty}^0 d\tilde{x}_1 \int_{-\infty}^0 d\tilde{x}_2 -\int_0^1 d\tilde{x}_1 \int_{1-\tilde{x}_1}^{+\infty}d\tilde{x}_2 - \int_{1}^{+\infty} d\tilde{x}_1 \int_{0}^{+\infty}d\tilde{x}_2\right) \tilde{I}^{-3/2} \,,
+\end{split}
+\end{align}
+where we have redefined 
+\begin{equation}
+\tilde{I} \equiv k_1^2 \tilde{x}_1 \tilde{x}_2 + k_2^2 \tilde{x}_2 (1 -\tilde{x}_1 - \tilde{x}_2 )+k_3^2 \tilde{x}_1 (1 - \tilde{x}_1 - \tilde{x}_2) + \tilde{x}_1 M_1 + \tilde{x}_2  M_2 + M_3 (1-\tilde{x}_1-\tilde{x}_2)\,,
+\end{equation}
+and used the fact that the sign of $\Im(\tilde{I})$ is constant in each integration region.
+
+We can go further and do another change of variables: $\tilde{x}_1 = x$, $\tilde{x}_2 = (1-x)y$, whose Jacobian is $1-x$.
+Let us separate the integration region in three parts, one in the third quadrant, and another two in the first quadrant.
+In the third quadrant, we have
+\begin{equation}
+\int_{-\infty}^0 d\tilde{x}_1 \int_{-\infty}^0 d\tilde{x}_2 = \int_{-\infty}^0 dx (1-x)\int_{-\infty}^0 dy  \,,
+\end{equation}
+and in the first quadrant we have
+\begin{equation}
+\int_0^1 d\tilde{x}_1 \int_{1-\tilde{x}_1}^{+\infty} d\tilde{x}_2 = \int_0^1 dx \int_1^{+\infty} dy (1-x) \,,
+\end{equation}
+and
+\begin{equation}
+\int_1^{+\infty} d\tilde{x}_1 \int_{0}^{+\infty} d\tilde{x}_2 = \int_1^{+\infty} dx \int_{-\infty}^0 dy |1-x| = \int_1^{+\infty} dx \int_{-\infty}^0 dy (x-1) \,.
+\end{equation} 
+So, we get for $T$:
+\begin{equation}
+\label{eq:Tdiff}
+T =  \frac{\sqrt{\pi}}{2}\left(\int_{-\infty}^0 dx \int_{-\infty}^0 dy 
+-\int_0^1 dx \int_{1}^{+\infty}dy
++ \int_{1}^{+\infty} dx \int_{-\infty}^{0}dy\right) (1-x)\tilde{I}^{-3/2}\,, 
+\end{equation}
+where $\tilde{I}$ is given in terms of $x$ and $y$ by
+\begin{equation}
+\tilde{I} = M_1 x +  M_2 y (1-x) + M_3 (1-y) (1-x) + k^2_1 x y (1-x) + k^2_2 (1-x)^2 y (1-y) + k^2_3 x (1-x)(1-y) \,.
+\end{equation}
+We observe that $\tilde{I}$ is a second order polynomial in $x$ and $y$. So we have
+\begin{equation}
+\tilde{I} = A_x (x-x_1)(x-x_2) = A_y (y-y_1)(y-y_2)\,,
+\end{equation}
+where $A_x$ and $A_y$ are given by:
+\begin{align}
+A_x &= y (-k_1^2+k_2^2+k_3^2)- k_2^2 y^2-k_3^2\,,\\
+A_y &= -k_2^2 (x-1)^2\,.
+\end{align}
+It is interesting to notice that $A_x<0$ and $A_y<0$.
+Now, we can write the integrand as
+\begin{equation}
+\begin{split}
+&\frac{1-x}{\tilde{I}^{3/2}}=\frac{1-x}{(A_x (x-x_1)(x-x_2))^{3/2}}=\frac{1-x}{A_x (x-x_1)(x-x_2)}\frac{1}{\sqrt{A_x (x-x_1)(x-x_2)}}\\
+&=\frac{1-x}{A_x (x-x_1)(x-x_2)}\frac{s(x_1-x,x-x_2)}{\sqrt{|A_x|}\sqrt{x_1-x}\sqrt{x-x_2}}\,,
+\end{split}
+\end{equation}
+or as 
+\begin{equation}
+\begin{split}
+&\frac{1-x}{\tilde{I}^{3/2}}=\frac{1-x}{A_y (y-y_1)(y-y_2)}\frac{s(y_1-y,y-y_2)}{\sqrt{|A_y|}\sqrt{y_1-y}\sqrt{y-y_2}}\,.
+\end{split}
+\end{equation}
+As a side note, since $\tilde{I}$ crosses the real line when $y = \frac{x \Im(M_1-M_3)+\Im(M_3)}{(x-1) \Im(M_2-M_3)}$, then if $x<0$,
+the crossing happens at a positive $y$, which means there is no crossing in the third quadrant. 
+Likewise, if $x>1$, the crossing happens at a positive $y$. 
+Therefore, in the region $x<0$ and $y<0$, there are no crossings, which means that $s(x_1-x,x-x_2) = s(x_1,-x_2)$, with $x_1$ and $x_2$ taken at $y=0$. 
+In the same way, in the region $x>1$ and $y<0$ there are no crossings, which means that $s(x_1-x,x-x_2) = s(x_1-1,1-x_2)$, with $x_1$ and $x_2$ taken at $y=0$.
+For convenience, we write here the values for $x_1$ and $x_2$ when $y=0$:
+\begin{align}
+&x_1(y=0) = \frac{\sqrt{(k_3^2 + M_1 - M_3)^2+4 k_3^2 M_3}+k_3^2 +M_1-M_3}{2 k_3^2}\\
+&x_2(y=0) = \frac{-\sqrt{(k_3^2 + M_1 - M_3)^2+4 k_3^2 M_3}+k_3^2 +M_1-M_3}{2 k_3^2}\,.
+\end{align} 
+Similar relations apply for $y$.
+
+Now we are ready to proceed from Eq.~\eqref{eq:Tdiff}. Let us analyze separately two of the three integration regions. We have,
+\begin{align}
+&\int_{-\infty}^0 dx \int_{-\infty}^0 dy (1-x)\tilde{I}^{-3/2} = \int_{-\infty}^0 dx \int_{-\infty}^0 dy \frac{1-x}{A_x (x-x_1)(x-x_2)}\frac{s(x_1,-x_2)}{\sqrt{|A_x|}\sqrt{x_1-x}\sqrt{x-x_2}} \\
+&\int_{1}^{+\infty} dx \int_{-\infty}^{0}dy (1-x)\tilde{I}^{-3/2}
+= \int_{1}^{+\infty} dx \int_{-\infty}^{0}dy \frac{1-x}{A_x (x-x_1)(x-x_2)}\frac{s(x_1-1,1-x_2)}{\sqrt{|A_x|}\sqrt{x_1-x}\sqrt{x-x_2}}\,,
+\end{align}
+so that 
+\begin{equation}
+\label{eq:part1T}
+\begin{split}
+&\left(\int_{-\infty}^0 dx \int_{-\infty}^0 dy 
++ \int_{1}^{+\infty} dx \int_{-\infty}^{0}dy\right) (1-x)\tilde{I}^{-3/2}\\
+& = \int_{-\infty}^0 dy \frac{s(x_1,-x_2)}{|A_x|^{3/2}} \left(\int_{-\infty}^0 dx 
++ \int_{1}^{+\infty} dx \frac{s(x_1-1,1-x_2)}{s(x_1,-x_2)}\right) \frac{1-x}{(x_1-x)^{3/2}(x-x_2)^{3/2}}\,,
+\end{split}
+\end{equation}
+where $x_1$ and $x_2$ inside $s$ are evaluated at $y=0$.
+We can then have 2 cases: either $s(x_1-1,1-x_2)=s(x_1,-x_2)$ or $s(x_1-1,1-x_2)=-s(x_1,-x_2)$. 
+For now, let us take the first case. Then, Eq.~\eqref{eq:part1T} becomes
+\begin{equation}
+  \label{eq:xpartT}
+\int_{-\infty}^0 dy \frac{s(x_1,-x_2)}{|A_x|^{3/2}} \left(\int_{-\infty}^{+\infty} dx 
+- \int_{0}^1 dx \right) \frac{1-x}{(x_1-x)^{3/2}(x-x_2)^{3/2}}\,,
+\end{equation}
+and it is straightforward to check that the first term $\int_{-\infty}^{+\infty} dx (\ldots)=0$ (by computing the antiderivative eg in Mathematica).
+Plugging in Eq.~\eqref{eq:Tdiff} yields
+\begin{equation}
+\label{eq:Tdiff2}
+T =  \frac{\sqrt{\pi}}{2}\left(-\int_0^1 dx \int_{-\infty}^0 dy \frac{s(x_1,-x_2)}{|A_x|^{3/2}} \frac{1-x}{(x_1-x)^{3/2}(x-x_2)^{3/2}}
+-\int_0^1 dx \int_{1}^{+\infty}dy
+(1-x)\tilde{I}^{-3/2}\right) \,, 
+\end{equation}
+and noting that, for $0<x<1$ and $y>1$
+\begin{equation}
+\begin{split}
+(1-x)\tilde{I}^{-3/2} &= \frac{1-x}{A_x (x-x_1)(x-x_2)}\frac{s(x_1(y=1),-x_2(y=1))}{\sqrt{|A_x|}\sqrt{x_1-x}\sqrt{x-x_2}} = \frac{(1-x)s(x_1,-x_2)}{|A_x|^{3/2} (x_1-x)^{3/2}(x-x_2)^{3/2}}\\
+&=\frac{(1-x)s(y_1-1,1-y_2)}{|A_y|^{3/2} (y_1-y)^{3/2}(y-y_2)^{3/2}}\,,
+\end{split}
+\end{equation}
+where $s(y_1-1,1-y_2)$ is evaluated at $x=0$,
+and also
+\begin{equation}
+\frac{s(x_1,-x_2)}{|A_x|^{3/2}} \frac{1-x}{(x_1-x)^{3/2}(x-x_2)^{3/2}} = \frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2} (y_1-y)^{3/2}(y-y_2)^{3/2}}\,,
+\end{equation}
+where $s(y_1,-y_2)$ is evaluated at $x=0$ as well.
+Let us consider the case where $s(y_1,-y_2) = s(y_1-1,1-y_2)$. Then Eq.~\eqref{eq:Tdiff2} becomes
+\begin{equation}
+  \label{eq:ypartT}
+\begin{split}
+T&=-\frac{\sqrt{\pi}}{2}\int_0^1 dx \left(\int_{-\infty}^0 dy + \int_{1}^{+\infty}dy\right)
+\frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2} (y_1-y)^{3/2}(y-y_2)^{3/2}}\\
+&= -\frac{\sqrt{\pi}}{2}\int_0^1 dx \left(\int_{-\infty}^{+\infty} dy - \int_{0}^1dy\right)
+\frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2} (y_1-y)^{3/2}(y-y_2)^{3/2}}\,,
+\end{split}
+\end{equation}
+where again we can easily check that $\int_{-\infty}^{+\infty} dy (\ldots)$ vanishes. Finally, we obtain:
+\begin{equation}
+T = \frac{\sqrt{\pi}}{2}\int_0^1 dx \int_{0}^1dy \frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2} (y_1-y)^{3/2}(y-y_2)^{3/2}}\,,
+\end{equation}
+which is the expression we were looking after! Notice the similarity with Eq.~\eqref{eq:Tsame}, with the difference that the denominator is already factorized. This can be easily written in terms of $F_{\rm int}$. Keep in mind that this is only valid if two conditions are satisfied: $s(x_1-1,1-x_2)=s(x_1,-x_2)$, with $x_1$ and $x_2$ evaluated at $y=0$, and $s(y_1-1,1-y_2)=s(y_1,-y_2)$, with $y_1$ and $y_2$ evaluated at $x=0$. For the masses used in our decomposition, those criteria are always satisfied. 
+***** ADD REMAINING CASES *****
+
+TO-DO's:
+\begin{enumerate}
+\item Add the remaining cases;
+\item Send the notes to Babis;
+\item Ask if there is already something to do for the 2-loop power spectrum;
+\end{enumerate}
+
+\subsection{Limiting values of $s(a,b)$}
+In the previous section, we evaluate expressions of the form $s(x_1 - x, x - x_0)$. In the regions of interest, i.e. $x > 0 || x < 0$, we
+may take $x \rightarrow -\infty || \infty$ to further simplify the expression. Consider,
+\begin{align}
+  \lim_{x \rightarrow \pm \infty}s(x_1 - x, x - x_0) &=  \lim_{x \rightarrow \pm\infty}(-1)^{\theta(-\Im(x_1 - x))\theta(-\Im(x - x_0))\theta(\Im (
+        (x_1 - x)(x -
+  x_0)))}(-1)^{\theta(\Im(x_1 - x))\theta(\Im(x - x_0))\theta(-\Im( (x_1 - x)(x - x_0)))}\\
+  &=\lim_{x\rightarrow\pm\infty} (-1)^{\theta(-\Im x_1)\theta(\Im(x_0))\theta(\Im(-x_1x_0 + x_1x + xx_0 - x^2))}(-1)^{\theta(\Im
+  x_1)\theta(-\Im x_0)\theta(-\Im (-x_1x_0 + x_1 x + x x_0 - x^2))}\\
+  &=\lim_{x \rightarrow \pm \infty} (-1)^{\theta(-\Im x_1)\theta(x_0)\theta(x(\Im x_1 + \Im x_0))}(-1)^{\theta(\Im x_1)\theta(-\Im x_0)\theta(-x(\Im x_1 + \Im x_0))}.
+\end{align}
+The above expression takes on different values depending on $\textrm{ sign} (\Im x_1), \textrm{ sign} (\Im x_0)$. There are three cases:
+\begin{itemize}
+  \item Case 1: $\textrm{sign}(\Im x_1) = \textrm{sign}(\Im x_0) \Rightarrow \lim_{x \rightarrow \pm \infty}s(x_1 - x, x - x_0) = 1$ 
+  \item Case 2: $\textrm{sign}(\Im x_1) > 0, \textrm{sign}(\Im x_0) < 0 \Rightarrow \lim_{x \rightarrow \pm \infty}s(x_1 - x, x - x_0) =
+    (-1)^{\theta(\mp(\Im x_1 - |\Im x_0|))}$
+  \item Case 3: $\textrm{sign}(\Im x_1) < 0, \textrm{sign}(\Im x_0) > 0 \Rightarrow \lim_{x \rightarrow \pm \infty}s(x_1 - x, x - x_0) =
+    (-1)^{\theta(\pm(\Im x_0 - |\Im x_1|))}$
+\end{itemize}
+In Eq.~\eqref{eq:part1T}, we investigate $s(x_1 - x, x - x_2)|_{x = 1} \stackrel{?}{=} s(x_1 - x, x - x_2)|_{x = 0}$. However, we can equivalently
+investigate $s(x_1 - x, x - x_2)|_{x = \infty} \stackrel{?}{=} s(x_1 - x, x - x_2)|_{x = -\infty}$ as $s(x_1 - 1, 1 - x_2) = s(x_1 - \infty,
+\infty - x_2)$ and $s(x_1, -x_2) = s(x_1 + \infty, -\infty - x_2)$. Using our above cases, we find,
+\[
+  s(x_1 - 1, 1 - x_2) =
+\begin{cases}
+  s(x_1, - x_2) = 1, & \text{if } \textrm{sign}(\Im x_1) = \textrm{sign}(\Im x_2)\\
+  -s(x_1, -x_2), & \text{otherwise}
+\end{cases}
+\]
+Hence, Eq.~\eqref{eq:xpartT} is valid if $\textrm{sign}(\Im x_1) = \textrm{sign}(\Im x_2)$. Now we return to Eq.~\eqref{eq:part1T} and consider the
+case $s(x_1 - 1, 1-x_2) = -s(x_1,-x_2)$. In this case, Eq.~\eqref{eq:part1T} becomes,
+\begin{align}
+  \int^0_{-\infty}dy\frac{s(x_1, -x_2)}{|A_x|^{3/2}}\left( \int^0_{-\infty}dx - \int^{\infty}_1dx \right)\frac{1-x}{(x_1 - x)^{3/2}(x -
+  x_2)^{3/2}}
+\end{align}
+As the integral in $x$ is now well defined over the real line, we can extend the region of integration so Eq.~\eqref{eq:part1T} becomes,
+\begin{align}
+  &\int^{0}_{-\infty}dy\frac{s(x_1, -x_2)}{|A_x|^{3/2}}\left( \int^0_{-\infty}dx - \int^{\infty}_{-\infty}dx + \int^{1}_{-\infty}dx
+  \right)\frac{1-x}{(x_1 - x)^{3/2}(x-x_2)^{3/2}}\\
+  &= \int^{0}_{-\infty}dy\frac{s(x_1, -x_2)}{|A_x|^{3/2}}\left( \int^{0}_{-\infty}dx + \int^{1}_{-\infty}dx \right)\frac{1-x}{(x_1 -
+  x)^{3/2}(x - x_2)^{3/2}}\\
+  &= \int^{0}_{-\infty}dy\frac{s(x_1, -x_2)}{|A_x|^{3/2}}\int^1_0\frac{1-x}{(x_1 - x)^{3/2}(x-x_2)^{3/2}} +
+  2\int^0_{-\infty}dy\frac{s(x_1, -x_2)}{|A_x|^{3/2}}\int^0_{-\infty}dx \frac{1-x}{(x_1 - x)^{3/2}(x - x_2)^{3/2}}.
+\end{align}
+Plugging back into Eq.~\eqref{eq:Tdiff},
+\begin{align}
+  T &=  \frac{\sqrt{\pi}}{2}\left( \left(\int^{1}_{0}dx\int^{0}_{-\infty}dy + 2\int^0_{-\infty}dx\int^0_{-\infty}dy\right)\frac{s(x_1, -x_2)}{|A_x|^{3/2}}\frac{1-x}{(x_1 - x)^{3/2}(x -
+  x_2)^{3/2}} - \int^1_0dx\int^{+\infty}_1dy(1-x)\tilde{I}^{-3/2} \right)\\
+  &= \frac{\sqrt{\pi}}{2}\left( \left(\int^1_0dx\int^{0}_{-\infty}dy + 2\int^0_{-\infty}dx\int^{0}_{-\infty}dy\right)\frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2}(y_1 - y)^{3/2}(y - y_2)^{3/2}} -
+  \int^1_0dx\int^{+\infty}_1dy\frac{(1-x)s(y_1 - 1, 1-y_2)}{|A_y|^{3/2}(y_1 - y)^{3/2}(y - y_2)^{3/2}} \right).
+\end{align}
+Again we can use our trick to evaluate $s(y_1, -y_2) = s(y_1 + \infty, -\infty - y_2)$ and $s(y_1 - 1, 1 - y_2) = s(y_1 - \infty, \infty -
+y_2)$ evaluated at $x = 0$.
+
+Consider the first case $\textrm{sign}(\Im y_1) = \textrm{sign}(\Im y_2) \rightarrow s(y_1, -y_2) = s(y_1 - 1, 1 - y_2) = 1$, then the above equation becomes,
+\begin{align}
+  T = \frac{\sqrt{\pi}}{2}\left(2\int^1_{-\infty}dx\int^0_{-\infty}dy + \int^1_0dx\int^1_0dy
+  \right)\frac{(1-x)}{|A_y|^{3/2}(y_1 - y)^{3/2}(y - y_2)^{3/2}}.
+\end{align}
+In the second case $\textrm{sign}(\Im y_1) \neq \textrm{sign}(\Im y_2) \rightarrow (s(y_1, -y_2) = -s(y_1 - 1, 1-y_2))$, then we have,
+\begin{align}
+  T = \frac{\sqrt{\pi}}{2}\left( 2\int^0_{-\infty}dx\int^0_{-\infty}dy + \int^1_0dx\int^1_0dy
+  \right)\frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2}(y_1-y)^{3/2}(y-y_2)^{3/2}}.
+\end{align}
+Now consider $\textrm{sign}(\Im x_1) = \textrm{sign}(\Im x_2)$ and $\textrm{sign}(\Im y_1) \neq \textrm{sign}(\Im y_2)$, then
+Eq.~\eqref{eq:Tdiff2} becomes,
+\begin{align}
+  T = -\frac{\sqrt{\pi}}{2}\int^1_0dx\left( 2\int^0_{-\infty}dy + \int^1_0dy
+  \right)\frac{(1-x)s(y_1,-y_2)}{|A_y|^{3/2}(y_1-y)^{3/2}(y - y_2)^{3/2}}.
+\end{align}
+Let us now investigate the conditions under which $\textrm{sign}(\Im x_1) \neq \textrm{sign}(\Im x_2)$ such that $s(x_1 - 1 , 1 - x_2) =
+-s(x_1, -x_2)$. $x_1(y = 0)$ and $x_2(y = 0)$ have the following form,
+\begin{align}
+  x_1 &=  \frac{1}{2}\left( 1 + m_1 - m_3 + \sqrt{(1 + m_1 - m_3)^2 + 4m_3} \right)\\
+  x_2 &=  \frac{1}{2}\left( 1 + m_1 - m_3 - \sqrt{(1 + m_1 - m_3)^2 + 4m_3} \right)
+\end{align}
+where $m_i = M_i/k^2_3$. Thus, the condition for the the imaginary part to change signs is,
+\begin{align}
+  \Im m_1 - \Im m_3 < |\Im\sqrt{(1 + m_1 - m_3)^2 + 4m_3}|.
+\end{align}
+Similarly, the condition for $\textrm{sign}(\Im y_1) \neq \textrm{sign}(\Im y_2)$ such that $s(y_1 - 1, 1 - x_2) = -s(y_1, -y_1)$ is,
+\begin{align}
+  \Im m_2 - \Im m_3 < |\Im \sqrt{(1 + m_2 - m_3)^2 + 4m_3}|.
+\end{align}
+where $m_i = M_i/k^2_2$.
+
+Notice that when $s(x_1 - 1, 1 - x_2) = -s(x_1, -x_2)$ and $s(y_1 - 1, 1 - y_2) = s(y_1, - y_2)$ we must add two regions of integration to
+our result, namely the region $x < 0, y < 0$ and the region $0<x<1, y < 0$. Let us examine frist the integration in $y$,
+\begin{align}
+  T_y = \int dy\frac{1-x}{|A_y|^{3/2}(y_1 - y)^{3/2}(y - y_2)^{3/2}} = \frac{4y - 2(y_1 + y_2)}{k^3_2(x-1)^2\sqrt{y_1 - y}\sqrt{y - y_2}(y_1 -
+  y_2)^2}
+\end{align}
+where we will subsequently take the limits of $\lim_{y \rightarrow 0}T_y(x) - \lim_{y \rightarrow -\infty}T_y(x)$,
+\begin{align}
+  \lim_{y \rightarrow 0}T_y(x) &=  \frac{-2(y_1 + y_2)(1 - x)}{k^2_2(x-1)^2(y_1 - y_2)^2\sqrt{-k^2_2(x-1)^2y_1y_2}}\\
+  \lim_{y \rightarrow -\infty}T_y(x) &=  \frac{-4i}{k^3_2(x-1)^2(y_1 - y_2)^2}.
+\end{align}
+Now, let us evaluate the region of integration $x < 0, y < 0$,
+\begin{align}
+  \int^0_{-\infty}dx\int^0_{-\infty}dy\frac{1-x}{|A_y|^{3/2}(y_1 - y)^{3/2}(y - y_2)^{3/2}} &=  \int^0_{-\infty}dx\left( \lim_{y\rightarrow0}T_y(x) - \lim_{y \rightarrow -\infty}T_y(x) \right)\\
+  \int^0_{-\infty}dx\lim_{y \rightarrow 0}T_y(x) &= \int^0_{-\infty}dx  \frac{c_1}{\sqrt{R_2(x - y_+)(x - y_-)}(x - x_+)} +
+  \left.\frac{c_2}{\sqrt{R_2(x - y_+)(x - y_-)}(x - x_-)}\right\vert_{y = 0}\\
+    &= c_1F_{\rm int}(0, y_+, y_-, x_+) + c_2F_{\rm int}(0, y_+, y_-, x_-) \nonumber \\
+    &+\lim_{x \rightarrow -\infty}\left(c_1F_{\rm int}(x,y_+,y_-,x_+) + c_2F_{\rm int}(x, y_+,y_-,x_-)\right)\vert_{y = 0}\\
+    \int^{0}_{-\infty}dx \lim_{y \rightarrow -\infty}T_y(x) &= \int^0_{-\infty}dx \frac{-4i|k_2|}{S_2(x-x_+)(x-x_-)}\\
+    &= \frac{-4i|k_2|}{S_2}\frac{\log(-x_+) - \log(-x_-)}{x_+ - x_-}
+\end{align}
+where $A_y, y_1, y_2$ is given in section ~\ref{sec:opposite}, $c_1, c_2, R_2, S_2$ are given in section ~\ref{sec:same} evaluated at
+$y = 0$. We also define the roots $y_+,y_-, x_+,x_-$,
+
+\begin{align}
+  y_+ &=  x_1 = \frac{1}{2}\left( 1 + m_1 - m_3 + \sqrt{(1 + m_1 - m_3)^2 + 4m_3} \right)\\
+  y_- &= x_2 = \frac{1}{2}\left( 1 + m_1 - m_3 - \sqrt{(1 + m_1 - m_3)^2 + 4m_3} \right)\\
+  x_{\pm} &= \frac{k^4_2 - (k_1 - k_3)(k_1 + k_3)(M_2 - M_3) + k^2_2(-k^2_1 - k^2_3 - 2M_1 + M_2 + M_3) \pm 2\sqrt{R} }{S_2}\\
+  S_2 &= (k_1 - k_2 - k_3)(k_1 + k_2 - k_3)(k_1 - k_2 + k_3)(k_1 + k_2 + k_3)\\
+  R &=-k^2_2(k^4_2M_1 + k^4_3M_2 - k^2_2(k^2_3(M_1 + M_2) + (M_1 - M_2)(M_1 - M_3))\nonumber \\
+  &+ k^2_3(M_1 - M_2)(M_2 - M_3) + k^4_1M_3 - k^2_1((M_1 - M_3)(M_2 - M_3) +k^2_2(k^2_3 + M_1 + M_3) + k^2_3(M_2 + M_3)))
+\end{align}
+In the region $0 < x < 1, y > 1$, 
+\begin{align}
+  \int^1_{0}dx \int^{+\infty}_{1}dy \frac{1-x}{|A_y|^{3/2}(y_1 - y)^{3/2}(y - y_2)^{3/2}} = -\left( c_1F_{\rm int}(x, y_+,y_-,x_+) +
+  c_2F_{\rm int}(x, y_+, y_-,x_+) \right)\vert^{x = 1}_{x = 0} \nonumber \\
++ \frac{4i|k_2|}{S_2}\frac{\log(x-x_+) - \log(x - x_-)}{x_+ -x_-}\vert^{x = 1}_{x = 0}
+\end{align}
+
+
+\subsection{Triangle integral with opposite imaginary masses}
+Recall from Eq.~\eqref{eq:Tdiff}, in the case of $M_3$ having negative imaginary mass, the regions of integration are split into 3. We can
+compute these integrals taking their respective integration limits,
+\begin{align}
+  I_1 &=  \frac{\sqrt{\pi}}{2}\int^0_{-\infty}dx\int^0_{-\infty}dy(1-x)\tilde{I}^{-3/2}\\
+  I_2 &= \frac{\sqrt{\pi}}{2}\int^{+\infty}_{1}dx\int^0_{-\infty}dy(1-x)\tilde{I}^{-3/2}\\
+  I_3 &= \frac{\sqrt{\pi}}{2}\int^1_0dx\int^{+\infty}_{1}dy(1-x)\tilde{I}^{-3/2}.
+\end{align}
+Let us now examine the first region of integration $I_1$,
+\begin{align}
+  I_1 &= \frac{\sqrt{\pi}}{2}\int^0_{-\infty}dx \lim_{y \rightarrow 0}T_y(x) - \lim_{y \rightarrow -\infty}T_y(x)\\
+&= \frac{\sqrt{\pi}}{2}\left( c_1F_{\rm int}(x, y_+, y_-, x_+) + c_2 F_{\rm int}(x, y_+, y_-, x_-)\right)\right.\vert^{x = 0}_{x =
+-\infty}\vert_{y = 0} - \frac{\log(-x_+) - \log(-x_-)}{x_+ -
+  x_-}\frac{2\sqrt{\pi}|k_2|i}{S_2}
+\end{align}
+where we have,
+\begin{align}
+  \lim_{x \rightarrow -\infty}F_{\rm int}(x, y_+, y_-, x_{\pm}) = \frac{2 \arctan\left[ \frac{\sqrt{x_{\pm} - y_+}}{\sqrt{-x_{\pm} + y_-}}
+  \right]i}{|k_2|\sqrt{y_- - x_{\pm}}\sqrt{x_{\pm} - y_+}}.
+\end{align}
+However, one needs to be careful of branch cut crossings in the region $x < 0$ and we will add the contribution of the branch cut the same
+way we do in the case of all imaginary masses having the same sign. There is also a further branch cut contribution from the log term in
+which we need to add the contribution if $\Im(x_+), \Im(x_-) < 0$. 
+
+The second region of integration $I_2$ is,
+\begin{align}
+  I_2 &= \frac{\sqrt{\pi}}{2}\int^{+\infty}_{1}dx\lim_{y \rightarrow 0}T_{y}(x) - \lim_{y \rightarrow -\infty}T_y(x)\\
+&= \frac{\sqrt{\pi}}{2}\left( c_1F_{\rm int}(x, y_+, y_-, x_+) + c_2F_{\rm int}(x, y_+, y_-, x_-) \right)\right.\vert^{x =
++\infty}_{x = 1}\vert_{y = 0} + \frac{\log(1 - x_+) - \log(1 - x_-)}{x_+ - x_-}\frac{2\sqrt{\pi}|k_2|i}{S_2}
+\end{align}
+where we have,
+\begin{align}
+  \lim_{x \rightarrow \infty}F_{\rm int}(x, y_+, y_-, x_{\pm}) = \frac{2\arctan \left[ \frac{\sqrt{x_{\pm} - y_+}}{\sqrt{-x_{\pm} + y_-}}
+  \right]i}{|k_2|\sqrt{-x_{\pm} + y_-}\sqrt{x_{\pm} - y_+}}
+\end{align}
+and again we evaluate the branch cut crossings in the region $x > 1$.
+
+Lastly, the region $I_3$,
+\begin{align}
+  I_3 &= \frac{\sqrt{\pi}}{2}\int^{1}_0dx \lim_{y \rightarrow + \infty}T_y(x) - \lim_{y \rightarrow 1}T_y(x)\\
+  &= \frac{\log(1 - x_+) - \log(1 - x_-) - \log(-x_+) + \log(-x_-)}{x_+ - x_-}\frac{2\sqrt{\pi}|k_2|i}{S_2} -
+  \frac{\sqrt{\pi}}{2}\left( c_1F_{\rm int}(x, y_+, y_-, x_+) + c_2F_{\rm int}(x, y_+, y_-, x_-)
+\right)\right.\vert^{x = 1}_{x = 0}\vert_{y = 1}
+\end{align}
+and we evaluate the branch cut crossing in the region $0 < x < 1$.
+
+Thus, the triangle integral is the,
+\begin{align}
+  T &=  I_1 + I_2 - I_3\\
+&= \frac{\sqrt{\pi}}{2}\left( c_1F_{\rm int}(x,y_+,y_-, x_+) + c_2F_{\rm int}(x, y_+, y_-, x_+)\right)\right.\vert^{x = 1}_{x = 0, y = 1}
+\nonumber \\
+&-\frac{\sqrt{\pi}}{2}\left( c_1F_{\rm int}(x, y_+, y_-, x_+) + c_2F_{\rm int}(x, y_+, y_-, x_+) \right)\right.\vert^{x = 1}_{x = 0, y =
+0}\\
+&= \frac{\sqrt{\pi}}{2}\left(P(a, y_+, y_-)(c_1\tilde{F}_{\rm int}(x, y_+, y_-, x_+) + c_2\tilde{F}_{\rm int}(x, y_+, y_-,
+x_-))\right)\right.\vert^{x = 1}_{x = 0, y = 1} \nonumber \\
+&-\frac{\sqrt{\pi}}{2}\left( s(y_+ - 1, 1 - y_+)P(a, y_+, y_-)(c_1\tilde{F}_{\rm int}(1, y_+, y_-, x_+) + c_2\tilde{F}_{\rm int}(1, y_+,
+y_-, x_-)) \right. \nonumber \\
+\left.&- P(a, y_+,y_-)(c_1\tilde{F}_{\rm int}(0, y_+, y_-, x_+) + c_2\tilde{F}_{\rm int}(0, y_+, y_-, x_-)) \right)\right.\vert_{y = 0}
+\end{align}
+where one should also include contributions from branch cut crossings in $-\infty < x < \infty$.
+
+\subsection{Derivation of $F_{\rm int}$}
+\label{sec:Fint}
+
+
+\subsection{Prefactor in antiderivative}
+
+The expression for $F_{\rm int}$ is
+\begin{equation}
+F_{\rm int}(x,y_1,y_2,x_0) = P(a,x,y_1,y_2)\frac{2 \arctan\left(\frac{\sqrt{x-y_1} \sqrt{x_0-y_2}}{\sqrt{x-y_2} \sqrt{y_1-x_0}}\right)}{\sqrt{y_1 - x_0}\sqrt{x_0 - y_2}}\,,
+\end{equation}
+where the function $P$ is given by:
+\begin{equation}
+P(a,x,y_1,y_2)=\frac{\sqrt{x-y_1} \sqrt{x-y_2}}{\sqrt{a (x-y_1) (x-y_2)}}\,.
+\end{equation}
+We also know that $F_{\rm int}$ is symmetric under $y_1 \Leftrightarrow y_2$.
+
+
+We only need to calculate this expression for $x \to 0$, keeping $x>0$. Also, $a$ is a negative real number. Let us use our product rule for square roots (defined in Section~\ref{sec:prelim}) to simplify this expression. In general we can just calculate this directly, but we may run into trouble when $y_1$ or $y_2$ vanish. Let us show how to deal with that.
+Take $y_1=0$. Then
+\begin{equation}
+P(a,x,y_1=0,y_2) = \frac{\sqrt{x}\sqrt{x-y_2}}{\sqrt{a x (x-y_2)}} = \frac{\sqrt{x}\sqrt{x-y_2}}{\sqrt{|a|}\sqrt{x}\sqrt{-(x-y_2)}} =  \frac{\sqrt{-y_2}}{\sqrt{|a|}\sqrt{y_2}}\,,
+\end{equation}
+and similarly
+\begin{equation}
+P(a,x,y_1,y_2=0) =  \frac{\sqrt{-y_1}}{\sqrt{|a|}\sqrt{y_1}}\,,
+\end{equation}
+and in the case where both $y_1$ and $y_2$ vanish:
+\begin{equation}
+P(a,x,y_1=0,y_2=0) = \frac{x}{\sqrt{a x^2}} = \frac{1}{\sqrt{a}} \,.
+\end{equation}
+Note that these results do not depend on $x$.
+
+\subsection{Limiting values for $\arctan$}
+
+Now that $P$ is well defined, let us look at $\tilde{F}_{\rm int} \equiv \frac{2 \arctan\left(\frac{\sqrt{x-y_1} \sqrt{x_0-y_2}}{\sqrt{x-y_2} \sqrt{y_1-x_0}}\right)}{\sqrt{y_1 - x_0}\sqrt{x_0 - y_2}}$. The issues that we are focusing on are:
+\begin{enumerate}
+\item When the result is indeterminate;
+\item When we cross a branch cut.
+\end{enumerate}
+
+The result can be indeterminate in 2 situations: when $x=y_2$ and when $x_0 = y_2$.
+Regarding the first case, we know that $x$ runs from 0 to 1, and we know that, for a general complex $z$:
+\begin{align}
+&\lim_{X \to 0^+} \arctan\left(\frac{z}{X}\right) = \frac{\sqrt{z^2}\pi}{2 z} \label{eq:limit1}\\
+&\lim_{X \to 0^+} \arctan\left(\frac{z}{i X}\right) = i \frac{\sqrt{-z^2}\pi}{2 z}\,. \label{eq:limit2}
+\end{align} 
+The problematic values of $y_2$ are 0 and 1 because they are the values at which we calculate the antiderivative. 
+
+When $y_2 = 0$, we have for a general function $f$, $\lim_{x \to 0^+} f(\sqrt{x-y_2}) = \lim_{X \to 0^+} f(X)$. 
+When $y_2 = 1$, we have $\lim_{x \to 1^-} f(\sqrt{x-y_2}) = \lim_{X \to 0^+} f(i X)$. 
+Therefore when $y_2 = 0$ we use Eq.~\eqref{eq:limit1} with $z = \frac{\sqrt{-y_1} \sqrt{x_0}}{\sqrt{y_1-x_0}}$, giving 
+\begin{equation}
+\tilde{F}_{\rm int} = \sqrt{\left(\frac{\sqrt{-y_1} \sqrt{x_0}}{\sqrt{y_1-x_0}}\right)^2}\frac{\pi}{2}\frac{\sqrt{y_1-x_0}}{\sqrt{-y_1} \sqrt{x_0}}= \sqrt{\frac{-y_1\, x_0}{y_1-x_0}}\frac{\pi}{2}\frac{\sqrt{y_1-x_0}}{\sqrt{-y_1} \sqrt{x_0}}\,,
+\end{equation}
+and this last expression can be simplified using the generalized product rule for square roots.
+
+
+
+ and when $y_2 = 1$ we use Eq.~\eqref{eq:limit2}, with the same $z$.
+
+When $x_0 = y_2$ we just use the Taylor approximation for $\arctan$ for a small argument $z$: $\arctan(z) \approx z$.
+
+
+
+\end{document}

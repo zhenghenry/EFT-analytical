@@ -1,0 +1,23 @@
+\contentsline {section}{\numberline {1}The problem: find expressions for bubble and triangle integrals}{1}{section.1}% 
+\contentsline {section}{\numberline {2}Preliminaries}{2}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Generalized multiplicative formulas for logs and square roots}{2}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}Schwinger parametrization}{2}{subsection.2.2}% 
+\contentsline {section}{\numberline {3}Bubble integral using Schwinger parameters}{3}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Masses with the same imaginary part sign}{3}{subsection.3.1}% 
+\contentsline {subsubsection}{\numberline {3.1.1}Finding a general expression for the integral}{3}{subsubsection.3.1.1}% 
+\contentsline {subsubsection}{\numberline {3.1.2}Analyzing the branch cut crossings}{4}{subsubsection.3.1.2}% 
+\contentsline {subsection}{\numberline {3.2}Masses with opposite imaginary part sign}{6}{subsection.3.2}% 
+\contentsline {subsubsection}{\numberline {3.2.1}Directly solving the integral}{6}{subsubsection.3.2.1}% 
+\contentsline {subsubsection}{\numberline {3.2.2}Relating this case with the case where masses have the same imaginary part sign}{7}{subsubsection.3.2.2}% 
+\contentsline {subsubsection}{\numberline {3.2.3}Relating the integrals using contour integration}{10}{subsubsection.3.2.3}% 
+\contentsline {section}{\numberline {4}Triangle integral with Schwinger parameters}{11}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Case where the imaginary part of the masses have the same sign}{11}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Case where all masses have positive real part}{13}{subsection.4.2}% 
+\contentsline {subsection}{\numberline {4.3}Case where the imaginary part of the masses have the opposite sign}{14}{subsection.4.3}% 
+\contentsline {subsubsection}{\numberline {4.3.1}Case where $s(x_1-1,1-x_2)=s(x_1,-x_2)$}{17}{subsubsection.4.3.1}% 
+\contentsline {subsubsection}{\numberline {4.3.2}Case where $s(x_1-1,1-x_2)=-s(x_1,-x_2)$}{19}{subsubsection.4.3.2}% 
+\contentsline {subsection}{\numberline {4.4}Note on $s(a,b)$}{20}{subsection.4.4}% 
+\contentsline {subsection}{\numberline {4.5}Alternative way to calculate triangle integral with opposite imaginary masses}{21}{subsection.4.5}% 
+\contentsline {subsection}{\numberline {4.6}Derivation of $F_{\rm int}$}{23}{subsection.4.6}% 
+\contentsline {subsection}{\numberline {4.7}$s(y_+,-y_-)$ function in $F_{\rm int}$}{25}{subsection.4.7}% 
+\contentsline {subsection}{\numberline {4.8}Limiting values for $\arctan $}{25}{subsection.4.8}% 
